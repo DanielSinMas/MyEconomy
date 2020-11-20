@@ -1,4 +1,4 @@
-package com.danielgimenez.myeconomy
+package com.danielgimenez.myeconomy.ui
 
 import androidx.multidex.MultiDexApplication
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent

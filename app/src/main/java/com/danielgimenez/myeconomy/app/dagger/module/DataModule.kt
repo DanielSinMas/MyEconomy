@@ -1,6 +1,6 @@
 package com.danielgimenez.myeconomy.app.dagger.module
 
-import com.danielgimenez.myeconomy.App
+import com.danielgimenez.myeconomy.ui.App
 import com.danielgimenez.myeconomy.data.source.network.MyEconomyApi
 import com.danielgimenez.myeconomy.data.source.network.NetworkDataSource
 import dagger.Module
