@@ -9,14 +9,16 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
+import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import javax.inject.Inject
 
 class FormularyFragment : Fragment() {
@@ -24,6 +26,7 @@ class FormularyFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var formularyViewModel: FormularyViewModel
+    private var dialog: AlertDialog? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +71,8 @@ class FormularyFragment : Fragment() {
         state?.let {
             when(state){
                 is SuccessAddEntryListState -> {
-
+                    Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
+                    if(dialog?.isShowing!!) dialog?.dismiss()
                 }
                 is LoadingAddEntryListState -> {
 
@@ -95,9 +99,14 @@ class FormularyFragment : Fragment() {
             }
         }
         val addButton = dialogView.findViewById<Button>(R.id.formulary_add_button)
+        val amount = dialogView.findViewById<TextInputEditText>(R.id.formulary_amount_text)
+        val description = dialogView.findViewById<TextInputEditText>(R.id.formulary_description_text)
+        val date = "20/11/2020"
+        val type = 0
         addButton.setOnClickListener{
-
+            val expense = Expense(amount.text.toString().toFloat(), description.text.toString(), type, date)
+            formularyViewModel.insertExpense(expense)
         }
-        val dialog = builder.show()
+        dialog = builder.show()
     }
 }

@@ -1,7 +1,7 @@
 package com.danielgimenez.myeconomy.ui.viewmodel
 
+import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.domain.model.Expense
-import retrofit2.Response
 
 sealed class AddExpenseListState{
     abstract val response: Response<List<Expense>>?
