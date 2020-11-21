@@ -5,8 +5,8 @@ import com.danielgimenez.myeconomy.data.repository.ExpenseRepository
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.usecase.BaseUseCase
 
-open class InsertExpenseUseCase(val repository: ExpenseRepository): BaseUseCase<InsertExpenseRequest, Expense>(){
-    override suspend fun run(): Response<Expense> {
-        return repository.insertExpense(request!!)
+class GetExpensesUseCase(val repository: ExpenseRepository): BaseUseCase<Nothing, List<Expense>>(){
+    override suspend fun run(): Response<List<Expense>> {
+        return repository.getExpenses()
     }
 }

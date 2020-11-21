@@ -17,5 +17,5 @@ interface ExpenseDao{
     fun delete(vararg expense: ExpenseEntity)
 
     @Query("SELECT * FROM " + ExpenseEntity.TABLE_NAME)
-    fun getExpense(): LiveData<List<ExpenseEntity>>
+    fun getExpense(): List<ExpenseEntity>
 }

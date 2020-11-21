@@ -3,6 +3,7 @@ package com.danielgimenez.myeconomy.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.danielgimenez.myeconomy.domain.model.Expense
 import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = ExpenseEntity.TABLE_NAME)
@@ -19,4 +20,8 @@ data class ExpenseEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
     var id : Int = 0
+
+    fun toModel(): Expense{
+        return Expense(amount, description, type, date)
+    }
 }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "675576005191",
+    "firebase_url": "https://myeconomy-ce296.firebaseio.com",
+    "project_id": "myeconomy-ce296",
+    "storage_bucket": "myeconomy-ce296.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675576005191:android:ea2098023f5aa623852762",
+        "android_client_info": {
+          "package_name": "com.danielgimenez.myeconomy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675576005191-sd208te8bo3vdad1msio3nsh2ogfa92e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiHfIrzGbPbg3yIFR16fIkZXANTXOkpg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675576005191-sd208te8bo3vdad1msio3nsh2ogfa92e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

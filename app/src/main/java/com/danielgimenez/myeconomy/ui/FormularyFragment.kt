@@ -1,6 +1,6 @@
 package com.danielgimenez.myeconomy.ui
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -9,20 +9,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.danielgimenez.myeconomy.R
+import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
 import com.danielgimenez.myeconomy.domain.model.Expense
+import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import java.text.Format
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class FormularyFragment : Fragment() {
 
@@ -32,6 +36,8 @@ class FormularyFragment : Fragment() {
     private var dialog: AlertDialog? = null
 
     private var calendar: Calendar? = null
+    private var recycler : RecyclerView? = null
+    private var expenseAdapter: ExpenseAdapter? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +59,7 @@ class FormularyFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         prepareViewModel()
+        formularyViewModel.seachTypes()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,21 +68,29 @@ class FormularyFragment : Fragment() {
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             createDialog()
         }
-
-        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-
+        recycler = view.findViewById<RecyclerView>(R.id.expense_recycler)
+        expenseAdapter = ExpenseAdapter(ArrayList())
+        recycler?.apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = expenseAdapter
         }
     }
 
     private fun prepareViewModel(){
         formularyViewModel = ViewModelProvider(this, viewModelFactory).get(FormularyViewModel::class.java)
         formularyViewModel.addExpenseListLiveData.observe(viewLifecycleOwner, addExpenseListStateObserver)
+        formularyViewModel.getExpenseListLiveData.observe(viewLifecycleOwner, getExpenseListStateObserver)
+        formularyViewModel.getExpenses()
     }
 
     private val addExpenseListStateObserver = Observer<AddExpenseListState>{ state ->
         state?.let {
             when(state){
                 is SuccessAddEntryListState -> {
+                    val response = it.response as Response.Success
+                    (recycler?.adapter as ExpenseAdapter).addExpense(response.data)
+                    (recycler?.adapter as ExpenseAdapter).notifyDataSetChanged()
+                    sendEvents(response)
                     Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
                     if(dialog?.isShowing!!) dialog?.dismiss()
                 }
@@ -89,6 +104,25 @@ class FormularyFragment : Fragment() {
         }
     }
 
+    private val getExpenseListStateObserver = Observer<GetExpenseListState>{state ->
+        state.let {
+            when(state){
+                is SuccessGetEntryListState -> {
+                    val list = state.response as Response.Success
+                    expenseAdapter?.setList(list.data as ArrayList<Expense>)
+                    expenseAdapter?.notifyDataSetChanged()
+                }
+                is LoadingGetEntryListState -> {
+
+                }
+                is ErrorGetEntryListState -> {
+
+                }
+            }
+        }
+    }
+
+    @SuppressLint("UseRequireInsteadOfGet")
     private fun createDialog(){
         val dialogView = LayoutInflater.from(context).inflate(R.layout.formularydialog_layout, null)
         val builder = AlertDialog.Builder(context).setView(dialogView)
@@ -97,7 +131,7 @@ class FormularyFragment : Fragment() {
             ArrayAdapter.createFromResource(
                 it,
                     R.array.types,
-                android.R.layout.simple_spinner_item
+                android.R.layout.simple_spinner_dropdown_item
             ).also { adapter ->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 selector.adapter = adapter
@@ -107,15 +141,38 @@ class FormularyFragment : Fragment() {
         val amount = dialogView.findViewById<TextInputEditText>(R.id.formulary_amount_text)
         val description = dialogView.findViewById<TextInputEditText>(R.id.formulary_description_text)
         val date = dialogView.findViewById<TextInputEditText>(R.id.formulary_date_text)
-        val type = 0
+        var adapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, formularyViewModel.getTypes())
+        selector.adapter = adapter
         date.setOnClickListener {
             createDatePicker(date)
         }
         addButton.setOnClickListener{
-            val expense = Expense(amount.text.toString().toFloat(), description.text.toString(), type, date.text.toString())
-            formularyViewModel.insertExpense(expense)
+            if(validate(dialogView, amount, date)) {
+                val expense = Expense(
+                    amount.text.toString().toFloat(),
+                    description.text.toString(),
+                    formularyViewModel.getId(
+                        selector.selectedItem as String
+                    ),
+                    date.text.toString()
+                )
+                formularyViewModel.insertExpense(expense)
+            }
         }
         dialog = builder.show()
+    }
+
+    private fun validate(dialogView: View, amount: TextInputEditText, date: TextInputEditText): Boolean{
+        var isValid = true
+        if(amount.text.toString().isEmpty()){
+            isValid = false
+            dialogView.findViewById<ImageView>(R.id.formulary_amount_error).visibility = View.VISIBLE
+        }
+        if(date.text.toString().isEmpty()){
+            isValid = false
+            dialogView.findViewById<ImageView>(R.id.formulary_date_error).visibility = View.VISIBLE
+        }
+        return isValid
     }
 
     private fun createDatePicker(date: TextInputEditText) {
@@ -140,5 +197,9 @@ class FormularyFragment : Fragment() {
         return dateFormat.format(calendar.time)
     }
 
-
+    private fun sendEvents(response: Response.Success<Expense>) {
+        response.data.let {
+            (context as MainActivity).sendEvent("Expense", "Factura")
+        }
+    }
 }

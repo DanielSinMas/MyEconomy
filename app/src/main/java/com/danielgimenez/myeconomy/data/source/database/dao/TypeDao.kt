@@ -17,5 +17,5 @@ interface TypeDao {
     fun delete(vararg expense: TypeEntity)
 
     @Query("SELECT * FROM " + TypeEntity.TABLE_NAME)
-    fun getExpense(): LiveData<List<TypeEntity>>
+    fun getTypes(): List<TypeEntity>
 }

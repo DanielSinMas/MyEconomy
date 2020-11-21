@@ -1,8 +1,10 @@
 package com.danielgimenez.myeconomy.data.source.database
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.danielgimenez.myeconomy.data.entity.ExpenseEntity
 import com.danielgimenez.myeconomy.data.entity.TypeEntity
+import com.danielgimenez.myeconomy.domain.model.Expense
 
 open class DiskDataSource(context: Context): IDiskDataSource(){
 
@@ -19,4 +21,8 @@ open class DiskDataSource(context: Context): IDiskDataSource(){
 
     //TYPES
     override fun insertType(entity: TypeEntity): Long? { return database?.typeDao()?.insert(entity)}
+
+    override fun getTypes(): List<TypeEntity>? { return database?.typeDao()?.getTypes()}
+
+    override fun getExpenses(): List<Expense>? { return database?.expenseDao()?.getExpense()?.map { it.toModel() }}
 }

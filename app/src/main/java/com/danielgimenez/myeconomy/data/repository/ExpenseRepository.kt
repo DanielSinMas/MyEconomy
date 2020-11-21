@@ -11,10 +11,13 @@ class ExpenseRepository(private val context: Context,
                         private val diskDataSource: IDiskDataSource,
                         private val networkDataSource: INetworkDataSource) {
 
-    suspend fun insertExpense(request: InsertExpenseRequest): Response<List<Expense>>{
+    suspend fun insertExpense(request: InsertExpenseRequest): Response.Success<Expense> {
         diskDataSource.insertExpense(request.expense.toEntity())
-        val list = ArrayList<Expense>()
-        list.add(Expense(14.45f, "", 1, ""))
+        return Response.Success(request.expense)
+    }
+
+    suspend fun getExpenses(): Response.Success<List<Expense>> {
+        val list = diskDataSource.getExpenses()!!
         return Response.Success(list)
     }
 }
