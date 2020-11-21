@@ -1,15 +1,16 @@
 package com.danielgimenez.myeconomy.ui
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.format.DateFormat
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.danielgimenez.myeconomy.R
@@ -19,6 +20,8 @@ import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import java.text.Format
+import java.util.*
 import javax.inject.Inject
 
 class FormularyFragment : Fragment() {
@@ -27,6 +30,8 @@ class FormularyFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var formularyViewModel: FormularyViewModel
     private var dialog: AlertDialog? = null
+
+    private var calendar: Calendar? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -101,12 +106,39 @@ class FormularyFragment : Fragment() {
         val addButton = dialogView.findViewById<Button>(R.id.formulary_add_button)
         val amount = dialogView.findViewById<TextInputEditText>(R.id.formulary_amount_text)
         val description = dialogView.findViewById<TextInputEditText>(R.id.formulary_description_text)
-        val date = "20/11/2020"
+        val date = dialogView.findViewById<TextInputEditText>(R.id.formulary_date_text)
         val type = 0
+        date.setOnClickListener {
+            createDatePicker(date)
+        }
         addButton.setOnClickListener{
-            val expense = Expense(amount.text.toString().toFloat(), description.text.toString(), type, date)
+            val expense = Expense(amount.text.toString().toFloat(), description.text.toString(), type, date.text.toString())
             formularyViewModel.insertExpense(expense)
         }
         dialog = builder.show()
     }
+
+    private fun createDatePicker(date: TextInputEditText) {
+        var listener = DatePickerDialog.OnDateSetListener{ datePicker: DatePicker, year: Int, month: Int, day: Int ->
+            calendar = Calendar.getInstance()
+            calendar?.set(year, month, day)
+            date.setText(formatDate(calendar!!))
+            date.clearFocus()
+        }
+        val calendar = Calendar.getInstance()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH]
+        context.let {
+            var dialog = it?.let { it1 -> DatePickerDialog(it1, listener, year, month, day) }
+            dialog?.show()
+        }
+    }
+
+    private fun formatDate(calendar: Calendar): String{
+        val dateFormat: Format = DateFormat.getDateFormat(context)
+        return dateFormat.format(calendar.time)
+    }
+
+
 }
