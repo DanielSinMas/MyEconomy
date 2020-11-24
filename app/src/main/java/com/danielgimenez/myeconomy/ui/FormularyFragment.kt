@@ -1,10 +1,9 @@
 package com.danielgimenez.myeconomy.ui
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.text.format.DateFormat
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,14 +20,16 @@ import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFr
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
 import com.danielgimenez.myeconomy.ui.viewmodel.*
+import com.danielgimenez.myeconomy.utils.DateFunctions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
-import java.text.Format
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class FormularyFragment : Fragment() {
+class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -68,8 +69,8 @@ class FormularyFragment : Fragment() {
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             createDialog()
         }
-        recycler = view.findViewById<RecyclerView>(R.id.expense_recycler)
-        expenseAdapter = ExpenseAdapter(ArrayList())
+        recycler = view.findViewById(R.id.expense_recycler)
+        expenseAdapter = ExpenseAdapter(ArrayList(), ArrayList(), this)
         recycler?.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = expenseAdapter
@@ -80,7 +81,6 @@ class FormularyFragment : Fragment() {
         formularyViewModel = ViewModelProvider(this, viewModelFactory).get(FormularyViewModel::class.java)
         formularyViewModel.addExpenseListLiveData.observe(viewLifecycleOwner, addExpenseListStateObserver)
         formularyViewModel.getExpenseListLiveData.observe(viewLifecycleOwner, getExpenseListStateObserver)
-        formularyViewModel.getExpenses()
     }
 
     private val addExpenseListStateObserver = Observer<AddExpenseListState>{ state ->
@@ -90,6 +90,7 @@ class FormularyFragment : Fragment() {
                     val response = it.response as Response.Success
                     (recycler?.adapter as ExpenseAdapter).addExpense(response.data)
                     (recycler?.adapter as ExpenseAdapter).notifyDataSetChanged()
+                    (recycler?.adapter as ExpenseAdapter).notifyItemChanged(0)
                     sendEvents(response)
                     Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
                     if(dialog?.isShowing!!) dialog?.dismiss()
@@ -111,6 +112,7 @@ class FormularyFragment : Fragment() {
                     val list = state.response as Response.Success
                     expenseAdapter?.setList(list.data as ArrayList<Expense>)
                     expenseAdapter?.notifyDataSetChanged()
+                    expenseAdapter?.setTypes(formularyViewModel.getTypes())
                 }
                 is LoadingGetEntryListState -> {
 
@@ -122,7 +124,6 @@ class FormularyFragment : Fragment() {
         }
     }
 
-    @SuppressLint("UseRequireInsteadOfGet")
     private fun createDialog(){
         val dialogView = LayoutInflater.from(context).inflate(R.layout.formularydialog_layout, null)
         val builder = AlertDialog.Builder(context).setView(dialogView)
@@ -141,20 +142,23 @@ class FormularyFragment : Fragment() {
         val amount = dialogView.findViewById<TextInputEditText>(R.id.formulary_amount_text)
         val description = dialogView.findViewById<TextInputEditText>(R.id.formulary_description_text)
         val date = dialogView.findViewById<TextInputEditText>(R.id.formulary_date_text)
-        var adapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, formularyViewModel.getTypes())
+        date.setText(DateFunctions.formatDate(Calendar.getInstance(), requireContext()))
+        val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, formularyViewModel.getTypes())
         selector.adapter = adapter
         date.setOnClickListener {
             createDatePicker(date)
         }
         addButton.setOnClickListener{
             if(validate(dialogView, amount, date)) {
+                val formatter = DateTimeFormatter.ofPattern("dd/MM/yy")
+                val localdate = LocalDate.parse(date.text.toString(), formatter)
                 val expense = Expense(
                     amount.text.toString().toFloat(),
                     description.text.toString(),
                     formularyViewModel.getId(
                         selector.selectedItem as String
                     ),
-                    date.text.toString()
+                    localdate
                 )
                 formularyViewModel.insertExpense(expense)
             }
@@ -176,10 +180,10 @@ class FormularyFragment : Fragment() {
     }
 
     private fun createDatePicker(date: TextInputEditText) {
-        var listener = DatePickerDialog.OnDateSetListener{ datePicker: DatePicker, year: Int, month: Int, day: Int ->
+        val listener = DatePickerDialog.OnDateSetListener{ _: DatePicker, year: Int, month: Int, day: Int ->
             calendar = Calendar.getInstance()
             calendar?.set(year, month, day)
-            date.setText(formatDate(calendar!!))
+            date.setText(DateFunctions.formatDate(calendar!!, requireContext()))
             date.clearFocus()
         }
         val calendar = Calendar.getInstance()
@@ -187,19 +191,19 @@ class FormularyFragment : Fragment() {
         val month = calendar[Calendar.MONTH]
         val day = calendar[Calendar.DAY_OF_MONTH]
         context.let {
-            var dialog = it?.let { it1 -> DatePickerDialog(it1, listener, year, month, day) }
+            val dialog = it?.let { it1 -> DatePickerDialog(it1, listener, year, month, day) }
             dialog?.show()
         }
-    }
-
-    private fun formatDate(calendar: Calendar): String{
-        val dateFormat: Format = DateFormat.getDateFormat(context)
-        return dateFormat.format(calendar.time)
     }
 
     private fun sendEvents(response: Response.Success<Expense>) {
         response.data.let {
             (context as MainActivity).sendEvent("Expense", "Factura")
         }
+    }
+
+    override fun onMonthChanged(month: Int, year: Int?) {
+        Log.e("Month", "Selected: $month")
+        formularyViewModel.getExpensesByMonth(month)
     }
 }

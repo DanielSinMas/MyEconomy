@@ -4,14 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.danielgimenez.myeconomy.data.entity.ExpenseEntity
 import com.danielgimenez.myeconomy.data.entity.TypeEntity
+import com.danielgimenez.myeconomy.data.entity.converter.LocalDateConverter
 import com.danielgimenez.myeconomy.data.source.database.dao.ExpenseDao
 import com.danielgimenez.myeconomy.data.source.database.dao.TypeDao
 
 
 @Database(entities = [ExpenseEntity::class, TypeEntity::class], version = 1)
+@TypeConverters(LocalDateConverter::class)
 abstract class MyEconomyDatabase: RoomDatabase(){
     abstract fun expenseDao(): ExpenseDao
     abstract fun typeDao(): TypeDao

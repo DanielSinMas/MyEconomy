@@ -2,6 +2,7 @@ package com.danielgimenez.myeconomy.app.dagger.module
 
 import com.danielgimenez.myeconomy.data.repository.ExpenseRepository
 import com.danielgimenez.myeconomy.data.repository.TypeRepository
+import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpenseByMonthUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseUseCase
 import com.danielgimenez.myeconomy.domain.usecase.types.GetTypesUseCase
@@ -16,6 +17,9 @@ class DomainModule{
 
     @Provides
     fun provideGetExpensesUseCase(repository: ExpenseRepository) = GetExpensesUseCase(repository)
+
+    @Provides
+    fun provideGetExpensesByMonthUseCase(repository: ExpenseRepository) = GetExpenseByMonthUseCase(repository)
 
     @Provides
     fun provideGetTypesUseCase(repository: TypeRepository) = GetTypesUseCase(repository)

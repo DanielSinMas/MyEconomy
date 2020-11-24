@@ -13,10 +13,10 @@ android {
 
     defaultConfig {
         applicationId "com.danielgimenez.myeconomy"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -45,6 +45,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    signingConfigs {
+        debug {
+            storeFile rootProject.file('debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
     }
 }
 

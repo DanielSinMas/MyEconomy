@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.model.Type
-import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesUseCase
-import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
-import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseUseCase
+import com.danielgimenez.myeconomy.domain.usecase.expenses.*
 import com.danielgimenez.myeconomy.domain.usecase.types.GetTypesUseCase
 import com.danielgimenez.myeconomy.utils.launchSilent
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -17,6 +15,7 @@ import kotlin.coroutines.CoroutineContext
 
 class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: InsertExpenseUseCase,
                                              private val getExpensesUseCase: GetExpensesUseCase,
+                                             private val getExpenseByMonthUseCase: GetExpenseByMonthUseCase,
                                              private val getTypesUseCase: GetTypesUseCase,
                                              private val coroutineContext: CoroutineContext): ViewModel(){
 
@@ -34,6 +33,12 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
 
     fun getExpenses() = launchSilent(coroutineContext, exceptionHandler, job){
         val response = getExpensesUseCase.execute()
+        getExpenseListLiveData.postValue(SuccessGetEntryListState(response))
+    }
+
+    fun getExpensesByMonth(month: Int) = launchSilent(coroutineContext, exceptionHandler, job){
+        val request = GetExpensesByMonthRequest(month)
+        val response = getExpenseByMonthUseCase.execute(request)
         getExpenseListLiveData.postValue(SuccessGetEntryListState(response))
     }
 
