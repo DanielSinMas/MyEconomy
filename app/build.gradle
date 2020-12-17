@@ -34,9 +34,9 @@ android {
         }
         debug{
             debuggable true
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             buildConfigField "String", "API_URL", '"https://aquivalaurl.com"'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
