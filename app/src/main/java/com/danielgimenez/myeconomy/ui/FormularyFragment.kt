@@ -151,7 +151,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         addButton.setOnClickListener{
             if(validate(dialogView, amount, date)) {
                 val formatter = DateTimeFormatter.ofPattern("dd/MM/yy")
-                val localdate = LocalDate.parse(date.text.toString(), formatter)
+                val localdate = LocalDate.parse(/*date.text.toString()*/ "02/01/21", formatter)
                 val expense = Expense(
                     amount.text.toString().toFloat(),
                     description.text.toString(),

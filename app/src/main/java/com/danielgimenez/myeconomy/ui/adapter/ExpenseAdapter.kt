@@ -107,7 +107,6 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
                 })
                 monthTv?.startAnimation(animation)
             }
-
         }
     }
 
