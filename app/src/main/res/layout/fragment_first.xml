@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.FormularyFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.danielgimenez.myeconomy.ui.components.ExpensesComponent
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/expense_recycler"/>
+        android:id="@+id/expense_component"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

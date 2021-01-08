@@ -19,12 +19,11 @@ import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
+import com.danielgimenez.myeconomy.ui.components.ExpensesComponent
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.danielgimenez.myeconomy.utils.DateFunctions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -37,8 +36,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
     private var dialog: AlertDialog? = null
 
     private var calendar: Calendar? = null
-    private var recycler : RecyclerView? = null
-    private var expenseAdapter: ExpenseAdapter? = null
+    private var expensesComponent: ExpensesComponent? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -69,12 +67,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             createDialog()
         }
-        recycler = view.findViewById(R.id.expense_recycler)
-        expenseAdapter = ExpenseAdapter(ArrayList(), ArrayList(), this)
-        recycler?.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = expenseAdapter
-        }
+        expensesComponent = view.findViewById(R.id.expense_component)
+        expensesComponent?.setListener(this)
     }
 
     private fun prepareViewModel(){
@@ -88,9 +82,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             when(state){
                 is SuccessAddEntryListState -> {
                     val response = it.response as Response.Success
-                    (recycler?.adapter as ExpenseAdapter).addExpense(response.data)
-                    (recycler?.adapter as ExpenseAdapter).notifyDataSetChanged()
-                    (recycler?.adapter as ExpenseAdapter).notifyItemChanged(0)
+                    expensesComponent?.addExpense(response.data)
                     sendEvents(response)
                     Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
                     if(dialog?.isShowing!!) dialog?.dismiss()
@@ -110,9 +102,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             when(state){
                 is SuccessGetEntryListState -> {
                     val list = state.response as Response.Success
-                    expenseAdapter?.setList(list.data as ArrayList<Expense>)
-                    expenseAdapter?.notifyDataSetChanged()
-                    expenseAdapter?.setTypes(formularyViewModel.getTypes())
+                    expensesComponent?.setList(list.data as ArrayList<Expense>)
+                    expensesComponent?.setTypes(formularyViewModel.getTypes())
                 }
                 is LoadingGetEntryListState -> {
 
@@ -150,8 +141,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         }
         addButton.setOnClickListener{
             if(validate(dialogView, amount, date)) {
-                val formatter = DateTimeFormatter.ofPattern("dd/MM/yy")
-                val localdate = LocalDate.parse(/*date.text.toString()*/ "02/01/21", formatter)
+                val localdate = DateFunctions.getLocalDate(date.text.toString())
                 val expense = Expense(
                     amount.text.toString().toFloat(),
                     description.text.toString(),

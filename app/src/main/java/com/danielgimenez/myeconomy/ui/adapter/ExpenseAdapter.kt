@@ -1,6 +1,5 @@
 package com.danielgimenez.myeconomy.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -45,7 +44,7 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
         }
     }
 
-    class ExpenseHeaderVieHolder(inflater: LayoutInflater, var parent: ViewGroup, list: ArrayList<Expense>, private val changeMonthListener: ChangeMonthListener): RecyclerView.ViewHolder(inflater.inflate(R.layout.expense_recycler_header, parent, false)){
+    class ExpenseHeaderVieHolder(inflater: LayoutInflater, var parent: ViewGroup, private val changeMonthListener: ChangeMonthListener): RecyclerView.ViewHolder(inflater.inflate(R.layout.expense_recycler_header, parent, false)){
         private var amount: TextView? = null
         private var monthTv: TextView? = null
         private var list: ArrayList<Expense>? = null
@@ -59,18 +58,8 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
             left = itemView.findViewById(R.id.expense_header_left)
             right = itemView.findViewById(R.id.expense_header_right)
             monthSelected = Calendar.getInstance()[Calendar.MONTH]
+            monthTv?.text = MONTHS[monthSelected!!]
             changeMonthListener.onMonthChanged(monthSelected!!+1)
-            this.list = list
-        }
-
-        fun bind(){
-            var total = 0.0
-            for(expense in list!!){
-                Log.e("Amount", expense.amount.toString())
-                total += expense.amount
-                Log.e("Total", total.toString())
-            }
-            amount?.text = "Total: ".plus(total.toString()).plus("€")
 
             left?.setOnClickListener {
                 val animation = AnimationUtils.loadAnimation(parent.context, android.R.anim.slide_out_right)
@@ -79,8 +68,8 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
                     }
 
                     override fun onAnimationEnd(animation: Animation?) {
-                        monthTv?.text = "October"
                         monthSelected = monthSelected?.minus(1)
+                        monthTv?.text = MONTHS[monthSelected!!]
                         changeMonthListener.onMonthChanged(monthSelected!!)
                     }
 
@@ -97,8 +86,8 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
                     }
 
                     override fun onAnimationEnd(animation: Animation?) {
-                        monthTv?.text = "October"
                         monthSelected = monthSelected?.plus(1)
+                        monthTv?.text = MONTHS[monthSelected!!]
                         changeMonthListener.onMonthChanged(monthSelected!!)
                     }
 
@@ -107,6 +96,12 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
                 })
                 monthTv?.startAnimation(animation)
             }
+        }
+
+        fun bind(list: ArrayList<Expense>) {
+            var total: Float = 0f
+            list.map { total += it.amount }
+            amount?.setText("Total: ".plus(total).plus("€"))
         }
     }
 
@@ -117,7 +112,7 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
         }
         else{
             val inflater = LayoutInflater.from(parent.context)
-            return ExpenseHeaderVieHolder(inflater, parent, list, changeMonthListener)
+            return ExpenseHeaderVieHolder(inflater, parent, changeMonthListener)
         }
     }
 
@@ -127,7 +122,7 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
             holder.bind(expense, position-1, types)
         }
         if(holder is ExpenseHeaderVieHolder){
-            holder.bind()
+            holder.bind(list)
         }
     }
 
@@ -152,5 +147,9 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
 
     interface ChangeMonthListener{
         fun onMonthChanged(month: Int, year: Int? = Calendar.getInstance()[Calendar.YEAR])
+    }
+
+    companion object{
+        var MONTHS = arrayOf("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE")
     }
 }
