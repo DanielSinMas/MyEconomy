@@ -4,15 +4,13 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
@@ -26,7 +24,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
 
@@ -194,6 +191,6 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
 
     override fun onMonthChanged(month: Int, year: Int?) {
         Log.e("Month", "Selected: $month")
-        formularyViewModel.getExpensesByMonth(month)
+        formularyViewModel.getExpensesByMonth(month+1)
     }
 }

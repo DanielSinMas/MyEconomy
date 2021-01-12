@@ -19,7 +19,7 @@ class LocalDateConverter {
         return localdate.toString()
     }
 
-    fun getLocalDateFromStringISO8601(dateString: String): LocalDate {
+    private fun getLocalDateFromStringISO8601(dateString: String): LocalDate {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         formatter = formatter.withLocale(Locale.getDefault())
         return LocalDate.parse(dateString, formatter)

@@ -25,7 +25,6 @@ class ExpensesComponent @JvmOverloads constructor(
         val view = LayoutInflater.from(context).inflate(R.layout.expenses_component_layout, this, true)
         orientation = VERTICAL
         recycler = view.findViewById(R.id.expense_recycler)
-
     }
 
     fun setListener(listener: ExpenseAdapter.ChangeMonthListener){
@@ -38,18 +37,18 @@ class ExpensesComponent @JvmOverloads constructor(
     }
 
     fun addExpense(expense: Expense){
-        (recycler?.adapter as ExpenseAdapter).addExpense(expense)
-        (recycler?.adapter as ExpenseAdapter).notifyDataSetChanged()
-        (recycler?.adapter as ExpenseAdapter).notifyItemChanged(0)
+        (recycler.adapter as ExpenseAdapter).addExpense(expense)
+        (recycler.adapter as ExpenseAdapter).notifyDataSetChanged()
+        (recycler.adapter as ExpenseAdapter).notifyItemChanged(0)
     }
 
     fun setList(list: ArrayList<Expense>){
-        (recycler?.adapter as ExpenseAdapter).setList(list)
-        (recycler?.adapter as ExpenseAdapter).notifyDataSetChanged()
-        (recycler?.adapter as ExpenseAdapter).notifyItemChanged(0)
+        (recycler.adapter as ExpenseAdapter).setList(list)
+        (recycler.adapter as ExpenseAdapter).notifyDataSetChanged()
+        (recycler.adapter as ExpenseAdapter).notifyItemChanged(0)
     }
 
     fun setTypes(types: List<String>){
-        (recycler?.adapter as ExpenseAdapter).setTypes(types)
+        (recycler.adapter as ExpenseAdapter).setTypes(types)
     }
 }
