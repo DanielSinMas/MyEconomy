@@ -11,10 +11,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.domain.model.Expense
+import com.danielgimenez.myeconomy.utils.DateFunctions
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: List<String>, private var changeMonthListener: ExpenseAdapter.ChangeMonthListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: List<String>, private var changeMonthListener: ChangeMonthListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var TYPE_HEADER = 0
     private var TYPE_VIEW = 1
@@ -35,8 +36,8 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
 
         fun bind(expense: Expense, position: Int, types: List<String>){
             amount?.text = expense.amount.toString().plus("€")
-            date?.text = expense.date.toString()
-            type?.text = types.get(expense.type-1)
+            date?.text = DateFunctions.getDateToShow(expense.date.toString())
+            type?.text = types[expense.type-1]
 
             if(position % 2 == 1){
                 layout?.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.recyclerBackgroundColor))
@@ -47,10 +48,8 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
     class ExpenseHeaderVieHolder(inflater: LayoutInflater, var parent: ViewGroup, private val changeMonthListener: ChangeMonthListener): RecyclerView.ViewHolder(inflater.inflate(R.layout.expense_recycler_header, parent, false)){
         private var amount: TextView? = null
         private var monthTv: TextView? = null
-        private var list: ArrayList<Expense>? = null
         private var left: ImageView? = null
         private var right: ImageView? = null
-        private var monthSelected: Int? = null
 
         init {
             amount = itemView.findViewById(R.id.expense_header_total)
@@ -58,8 +57,8 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
             left = itemView.findViewById(R.id.expense_header_left)
             right = itemView.findViewById(R.id.expense_header_right)
             monthSelected = Calendar.getInstance()[Calendar.MONTH]
-            monthTv?.text = MONTHS[monthSelected!!]
-            changeMonthListener.onMonthChanged(monthSelected!!+1)
+            monthTv?.text = MONTHS[monthSelected]
+            changeMonthListener.onMonthChanged(monthSelected)
 
             left?.setOnClickListener {
                 val animation = AnimationUtils.loadAnimation(parent.context, android.R.anim.slide_out_right)
@@ -68,9 +67,9 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
                     }
 
                     override fun onAnimationEnd(animation: Animation?) {
-                        monthSelected = monthSelected?.minus(1)
-                        monthTv?.text = MONTHS[monthSelected!!]
-                        changeMonthListener.onMonthChanged(monthSelected!!)
+                        monthSelected = monthSelected.minus(1)
+                        monthTv?.text = MONTHS[monthSelected]
+                        changeMonthListener.onMonthChanged(monthSelected)
                     }
 
                     override fun onAnimationRepeat(animation: Animation?) {
@@ -86,9 +85,9 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
                     }
 
                     override fun onAnimationEnd(animation: Animation?) {
-                        monthSelected = monthSelected?.plus(1)
-                        monthTv?.text = MONTHS[monthSelected!!]
-                        changeMonthListener.onMonthChanged(monthSelected!!)
+                        monthSelected = monthSelected.plus(1)
+                        monthTv?.text = MONTHS[monthSelected]
+                        changeMonthListener.onMonthChanged(monthSelected)
                     }
 
                     override fun onAnimationRepeat(animation: Animation?) {
@@ -99,9 +98,9 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
         }
 
         fun bind(list: ArrayList<Expense>) {
-            var total: Float = 0f
+            var total = 0f
             list.map { total += it.amount }
-            amount?.setText("Total: ".plus(total).plus("€"))
+            amount?.text = "Total: ".plus(total).plus("€")
         }
     }
 
@@ -135,10 +134,14 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
 
     fun setList(list: ArrayList<Expense>){
         this.list = list
+        notifyDataSetChanged()
+        notifyItemChanged(0)
     }
 
     fun addExpense(expense: Expense){
-        list.add(expense)
+        if(expense.date.month.value == monthSelected+1) list.add(expense)
+        notifyDataSetChanged()
+        notifyItemChanged(0)
     }
 
     fun setTypes(list: List<String>) {
@@ -150,6 +153,7 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
     }
 
     companion object{
+        var monthSelected = 0
         var MONTHS = arrayOf("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE")
     }
 }

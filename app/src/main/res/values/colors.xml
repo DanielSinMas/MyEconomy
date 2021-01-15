@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primaryColor">#ffbf00</color>
     <color name="recyclerBackgroundColor">#fff2cc</color>
+    <color name="type_header_background">#c9c9c9</color>
 </resources>

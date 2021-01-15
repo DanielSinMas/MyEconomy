@@ -31,5 +31,10 @@ class DateFunctions{
                 return LocalDate.parse(newString, formatter)
             }
         }
+
+        fun getDateToShow(date: String): String {
+            val split = date.split("-")
+            return split[2]+"/"+split[1]
+        }
     }
 }

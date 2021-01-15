@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
+import com.danielgimenez.myeconomy.ui.adapter.ExpenseTypeGroup
+import com.danielgimenez.myeconomy.ui.adapter.NewExpenseAdapter
 
 class ExpensesComponent @JvmOverloads constructor(
         context: Context,
@@ -18,37 +20,37 @@ class ExpensesComponent @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyle, defStyleRes) {
 
     private var recycler: RecyclerView
-    private lateinit var expenseAdapter: ExpenseAdapter
+    private lateinit var expenseAdapter: NewExpenseAdapter
     private lateinit var listener: ExpenseAdapter.ChangeMonthListener
+    private var types: List<String>? = ArrayList<String>()
 
     init{
         val view = LayoutInflater.from(context).inflate(R.layout.expenses_component_layout, this, true)
         orientation = VERTICAL
         recycler = view.findViewById(R.id.expense_recycler)
+        setList(ArrayList())
     }
 
     fun setListener(listener: ExpenseAdapter.ChangeMonthListener){
         this.listener = listener
-        expenseAdapter = ExpenseAdapter(ArrayList(), ArrayList(), listener)
-        recycler.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = expenseAdapter
-        }
     }
 
     fun addExpense(expense: Expense){
-        (recycler.adapter as ExpenseAdapter).addExpense(expense)
-        (recycler.adapter as ExpenseAdapter).notifyDataSetChanged()
-        (recycler.adapter as ExpenseAdapter).notifyItemChanged(0)
+        (recycler.adapter as NewExpenseAdapter).addExpense(expense)
     }
 
     fun setList(list: ArrayList<Expense>){
-        (recycler.adapter as ExpenseAdapter).setList(list)
-        (recycler.adapter as ExpenseAdapter).notifyDataSetChanged()
-        (recycler.adapter as ExpenseAdapter).notifyItemChanged(0)
+        val newList = ArrayList<ExpenseTypeGroup>()
+        if(types != null){
+            for(type in types!!){
+                newList.add(ExpenseTypeGroup(type, list.filter { it.type-1 == types?.indexOf(type) } as ArrayList<Expense>))
+            }
+        }
+        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.adapter = NewExpenseAdapter(newList)
     }
 
     fun setTypes(types: List<String>){
-        (recycler.adapter as ExpenseAdapter).setTypes(types)
+        this.types = types
     }
 }

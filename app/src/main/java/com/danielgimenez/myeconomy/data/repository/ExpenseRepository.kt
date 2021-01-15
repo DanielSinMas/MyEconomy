@@ -14,17 +14,17 @@ class ExpenseRepository(private val context: Context,
                         private val diskDataSource: IDiskDataSource,
                         private val networkDataSource: INetworkDataSource) {
 
-    suspend fun insertExpense(request: InsertExpenseRequest): Response.Success<Expense> {
+    fun insertExpense(request: InsertExpenseRequest): Response.Success<Expense> {
         diskDataSource.insertExpense(request.expense.toEntity())
         return Response.Success(request.expense)
     }
 
-    suspend fun getExpenses(): Response.Success<List<Expense>> {
+    fun getExpenses(): Response.Success<List<Expense>> {
         val list = diskDataSource.getExpenses()!!
         return Response.Success(list)
     }
 
-    suspend fun getExpensesByMonth(month: GetExpensesByMonthRequest): Response.Success<List<Expense>> {
+    fun getExpensesByMonth(month: GetExpensesByMonthRequest): Response.Success<List<Expense>> {
         var initial = LocalDate.of(month.year!!, month.month, 1)
         val list = diskDataSource.getExpensesByMonth(initial.withDayOfMonth(1), initial.withDayOfMonth(initial.lengthOfMonth()))!!
         return Response.Success(list)

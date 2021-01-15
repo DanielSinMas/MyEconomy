@@ -55,7 +55,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         prepareViewModel()
-        formularyViewModel.seachTypes()
+        formularyViewModel.searchTypes()
+        formularyViewModel.getExpenses()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,8 +100,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             when(state){
                 is SuccessGetEntryListState -> {
                     val list = state.response as Response.Success
-                    expensesComponent?.setList(list.data as ArrayList<Expense>)
                     expensesComponent?.setTypes(formularyViewModel.getTypes())
+                    expensesComponent?.setList(list.data as ArrayList<Expense>)
                 }
                 is LoadingGetEntryListState -> {
 

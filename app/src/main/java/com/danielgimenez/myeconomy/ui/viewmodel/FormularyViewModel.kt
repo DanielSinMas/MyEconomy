@@ -20,7 +20,6 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
                                              private val coroutineContext: CoroutineContext): ViewModel(){
 
     private val job: Job = Job()
-    private lateinit var types: List<Type>
 
     var addExpenseListLiveData = MutableLiveData<AddExpenseListState>()
     var getExpenseListLiveData = MutableLiveData<GetExpenseListState>()
@@ -42,7 +41,7 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
         getExpenseListLiveData.postValue(SuccessGetEntryListState(response))
     }
 
-    fun seachTypes(): Unit = launchSilent(coroutineContext, exceptionHandler, job){
+    fun searchTypes(): Unit = launchSilent(coroutineContext, exceptionHandler, job){
         val response = getTypesUseCase.execute(null)
         types = (response as Response.Success).data
     }
@@ -57,5 +56,9 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
     override fun onCleared() {
         super.onCleared()
         job.cancel()
+    }
+
+    companion object{
+        lateinit var types: List<Type>
     }
 }
