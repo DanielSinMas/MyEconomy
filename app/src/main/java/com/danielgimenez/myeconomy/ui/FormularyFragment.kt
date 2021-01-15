@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -57,6 +59,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         prepareViewModel()
         formularyViewModel.searchTypes()
         formularyViewModel.getExpenses()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,6 +70,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         }
         expensesComponent = view.findViewById(R.id.expense_component)
         expensesComponent?.setListener(this)
+        configureButtons(view)
     }
 
     private fun prepareViewModel(){
@@ -137,6 +141,9 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         date.setOnClickListener {
             createDatePicker(date)
         }
+        date.setOnFocusChangeListener{ _: View, b: Boolean ->
+            if(b) createDatePicker(date)
+        }
         addButton.setOnClickListener{
             if(validate(dialogView, amount, date)) {
                 val localdate = DateFunctions.getLocalDate(date.text.toString())
@@ -181,6 +188,49 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         context.let {
             val dialog = it?.let { it1 -> DatePickerDialog(it1, listener, year, month, day) }
             dialog?.show()
+        }
+    }
+
+    private fun configureButtons(view: View) {
+        val left = view.findViewById<ImageButton>(R.id.expense_header_left)
+        val right = view.findViewById<ImageButton>(R.id.expense_header_right)
+        val monthTv = view.findViewById<TextView>(R.id.expense_header_month)
+        ExpenseAdapter.monthSelected = Calendar.getInstance()[Calendar.MONTH]
+        monthTv.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
+        left?.setOnClickListener {
+            val animation = AnimationUtils.loadAnimation(context, R.anim.slide_out_right)
+            animation.setAnimationListener(object: Animation.AnimationListener{
+                override fun onAnimationStart(animation: Animation?) {
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    ExpenseAdapter.monthSelected = ExpenseAdapter.monthSelected.minus(1)
+                    monthTv?.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
+                    onMonthChanged(ExpenseAdapter.monthSelected)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+            })
+            monthTv?.startAnimation(animation)
+        }
+
+        right?.setOnClickListener {
+            val animation = AnimationUtils.loadAnimation(context, R.anim.slide_out_left)
+            animation.setAnimationListener(object: Animation.AnimationListener{
+                override fun onAnimationStart(animation: Animation?) {
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    ExpenseAdapter.monthSelected = ExpenseAdapter.monthSelected.plus(1)
+                    monthTv?.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
+                    onMonthChanged(ExpenseAdapter.monthSelected)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+            })
+            monthTv?.startAnimation(animation)
         }
     }
 

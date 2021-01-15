@@ -20,7 +20,8 @@ class TypeViewHolder(view: View): GroupViewHolder(view) {
         type.text = typeGroup.title
         var sum = 0f
         typeGroup.items.map { sum += it.amount }
-        total.text = "".plus(sum).plus("€")
+        if(sum % 1.0 != 0.0) total.text = sum.toString().plus("€")
+        else total.text = sum.toInt().toString().plus("€")
     }
 
     override fun expand() {

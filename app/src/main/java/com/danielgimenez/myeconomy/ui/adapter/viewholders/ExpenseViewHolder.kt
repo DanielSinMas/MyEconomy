@@ -18,7 +18,8 @@ class ExpenseViewHolder(view: View): ChildViewHolder(view) {
     private var layout: LinearLayout = itemView.findViewById(R.id.expense_item_layout)
 
     fun setExpense(expense: Expense, position: Int){
-        amount.text = expense.amount.toString()
+        if(expense.amount % 1.0 != 0.0) amount.text = expense.amount.toString().plus("€")
+        else amount.text = expense.amount.toInt().toString().plus("€")
         date.text = DateFunctions.getDateToShow(expense.date.toString())
         type.text = FormularyViewModel.types[expense.type-1].name
         if(position % 2 == 1) layout.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.recyclerBackgroundColor))

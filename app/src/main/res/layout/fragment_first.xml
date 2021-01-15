@@ -6,13 +6,81 @@
     android:layout_height="match_parent"
     tools:context=".ui.FormularyFragment">
 
-    <com.danielgimenez.myeconomy.ui.components.ExpensesComponent
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/expense_component"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/date_header"
+            android:background="@color/date_header_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.9">
+
+                <ImageButton
+                    android:layout_margin="10dp"
+                    android:id="@+id/expense_header_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/arrow_left"
+                    android:background="@drawable/date_button_background"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/expense_header_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="November"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.9">
+
+                <ImageButton
+                    android:layout_margin="10dp"
+                    android:id="@+id/expense_header_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/arrow_right"
+                    android:background="@drawable/date_button_background"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.danielgimenez.myeconomy.ui.components.ExpensesComponent
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/date_header"
+            android:id="@+id/expense_component"/>
+
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -23,6 +91,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="@color/primaryColor"
-        app:srcCompat="@android:drawable/ic_menu_more" />
+        app:srcCompat="@drawable/add_expense_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

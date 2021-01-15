@@ -20,7 +20,6 @@ class ExpensesComponent @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyle, defStyleRes) {
 
     private var recycler: RecyclerView
-    private lateinit var expenseAdapter: NewExpenseAdapter
     private lateinit var listener: ExpenseAdapter.ChangeMonthListener
     private var types: List<String>? = ArrayList<String>()
 
@@ -48,6 +47,7 @@ class ExpensesComponent @JvmOverloads constructor(
         }
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = NewExpenseAdapter(newList)
+
     }
 
     fun setTypes(types: List<String>){

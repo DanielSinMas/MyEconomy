@@ -10,4 +10,6 @@
     <color name="primaryColor">#ffbf00</color>
     <color name="recyclerBackgroundColor">#fff2cc</color>
     <color name="type_header_background">#c9c9c9</color>
+    <color name="date_header_background">#8a9597</color>
+    <color name="date_header_button_pressed">#5e6768</color>
 </resources>
