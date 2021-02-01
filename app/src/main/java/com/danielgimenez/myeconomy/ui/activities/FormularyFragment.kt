@@ -1,4 +1,4 @@
-package com.danielgimenez.myeconomy.ui
+package com.danielgimenez.myeconomy.ui.activities
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -18,6 +18,7 @@ import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
 import com.danielgimenez.myeconomy.domain.model.Expense
+import com.danielgimenez.myeconomy.ui.App
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
 import com.danielgimenez.myeconomy.ui.components.ExpensesComponent
 import com.danielgimenez.myeconomy.ui.viewmodel.*

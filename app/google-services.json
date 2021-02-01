@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "675576005191-2vfq9hds53i6mbmgco5cv7hoh735q30i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.danielgimenez.myeconomy",
+            "certificate_hash": "357930981511b0d2fbecf7f726273557f7f4ff01"
+          }
+        },
+        {
           "client_id": "675576005191-sd208te8bo3vdad1msio3nsh2ogfa92e.apps.googleusercontent.com",
           "client_type": 3
         }

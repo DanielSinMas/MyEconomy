@@ -1,4 +1,4 @@
-package com.danielgimenez.myeconomy.ui
+package com.danielgimenez.myeconomy.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
