@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.danielgimenez.myeconomy.R
+import com.danielgimenez.myeconomy.utils.saveUser
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -13,8 +14,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
@@ -24,17 +27,23 @@ class LoginActivity : AppCompatActivity() {
     private val GOOGLE_SIGN_IN = 100
     private lateinit var auth: FirebaseAuth
     private lateinit var gso: GoogleSignInOptions
+    private var db = Firebase.firestore
+    private val USERS_COLLECTION = "users"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        auth = Firebase.auth
+        val user = auth.currentUser
+        if(user != null){
+            startActivity(Intent(this, MainActivity::class.java))
+        }
 
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        auth = Firebase.auth
 
         val signInButton = findViewById<SignInButton>(R.id.signinbutton)
         signInButton.setSize(SignInButton.SIZE_STANDARD)
@@ -42,14 +51,6 @@ class LoginActivity : AppCompatActivity() {
         signInButton.setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, GOOGLE_SIGN_IN)
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val user = auth.currentUser
-        user.let {
-            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
@@ -64,8 +65,7 @@ class LoginActivity : AppCompatActivity() {
                         .addOnCompleteListener(this){
                             if(it.isSuccessful){
                                 val user = auth.currentUser
-                                Toast.makeText(this, "User:"+user?.email, Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, MainActivity::class.java))
+                                insertUser(user)
                             }
                             else{
                                 Toast.makeText(this, "Error:"+it.exception?.message, Toast.LENGTH_SHORT).show()
@@ -75,5 +75,18 @@ class LoginActivity : AppCompatActivity() {
                 Log.w("Error", "signInResult:failed code=" + e.statusCode)
             }
         }
+    }
+
+    private fun insertUser(user: FirebaseUser?){
+        val userMap = hashMapOf(
+            "email" to user?.email
+        )
+        db.collection(USERS_COLLECTION)
+            .document(user?.email!!)
+            .set(userMap)
+            .addOnSuccessListener {
+                saveUser(user)
+                startActivity(Intent(this, MainActivity::class.java))
+            }
     }
 }

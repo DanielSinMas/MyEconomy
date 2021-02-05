@@ -13,4 +13,13 @@ data class Expense(val amount: Float, val description: String, val type: Int, va
         entity.date = date
         return entity
     }
+
+    fun toMap(user: String) =
+        hashMapOf(
+            "amount" to amount,
+            "description" to description,
+            "type" to type,
+            "date" to date.toString(),
+            "user" to user
+        )
 }
