@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyEconomy">
         <activity android:name=".ui.activities.LoginActivity"
-            android:theme="@style/SplasTheme">
+            android:theme="@style/SplasTheme"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

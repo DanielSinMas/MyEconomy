@@ -17,13 +17,11 @@ import java.time.LocalDate
 
 class ExpenseRepository(private val context: Context,
                         private val diskDataSource: IDiskDataSource,
-                        private val networkDataSource: INetworkDataSource) {
-
-    private val EXPENSES_COLLECTION = "expenses"
+                        private val networkDataSource: INetworkDataSource): BaseRepository() {
 
     fun saveExpense(request: InsertExpenseRequest): Response.Success<Expense> {
         val result = diskDataSource.insertExpense(request.expense.toEntity())
-        saveExpense(request.expense)
+        saveExpense(context, request.expense)
         return Response.Success(request.expense)
     }
 
@@ -36,17 +34,5 @@ class ExpenseRepository(private val context: Context,
         var initial = LocalDate.of(month.year!!, month.month, 1)
         val list = diskDataSource.getExpensesByMonth(initial.withDayOfMonth(1), initial.withDayOfMonth(initial.lengthOfMonth()))!!
         return Response.Success(list)
-    }
-
-    private fun saveExpense(expense: Expense){
-        val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val user= sharedPref.getString("user", null)
-        if(user != null){
-            val expenseMap = expense.toMap(user)
-            val db = Firebase.firestore
-            val collection = db.collection(EXPENSES_COLLECTION)
-                .document(user)
-                .set(expenseMap)
-        }
     }
 }

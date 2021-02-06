@@ -137,7 +137,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         val description = dialogView.findViewById<TextInputEditText>(R.id.formulary_description_text)
         val date = dialogView.findViewById<TextInputEditText>(R.id.formulary_date_text)
         date.setText(DateFunctions.formatDate(Calendar.getInstance(), requireContext()))
-        val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, formularyViewModel.getTypes())
+        val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, formularyViewModel.getTypes())
         selector.adapter = adapter
         date.setOnClickListener {
             createDatePicker(date)

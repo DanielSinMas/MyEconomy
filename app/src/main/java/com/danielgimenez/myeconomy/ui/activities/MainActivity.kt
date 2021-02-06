@@ -1,5 +1,6 @@
 package com.danielgimenez.myeconomy.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
@@ -7,6 +8,8 @@ import android.view.MenuItem
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.data.source.database.MyEconomyDatabase.Companion.getInstace
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +33,11 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_logout -> {
+                Firebase.auth.signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
