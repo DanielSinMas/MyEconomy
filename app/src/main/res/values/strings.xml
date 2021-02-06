@@ -17,4 +17,5 @@
 
     <string name="menu_home">Expenses</string>
     <string name="second_fragment">Second Fragment</string>
+    <string name="configuration">Configuration</string>
 </resources>

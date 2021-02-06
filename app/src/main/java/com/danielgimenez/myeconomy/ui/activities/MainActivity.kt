@@ -2,11 +2,15 @@ package com.danielgimenez.myeconomy.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,12 +18,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.danielgimenez.myeconomy.R
-import com.danielgimenez.myeconomy.data.source.database.MyEconomyDatabase.Companion.getInstace
+import com.danielgimenez.myeconomy.utils.getUser
+import com.danielgimenez.myeconomy.utils.performLogout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_drawer_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawer_main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(findViewById(R.id.toolbar))
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
@@ -38,28 +43,33 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.FirstFragment, R.id.SecondFragment), drawerLayout)
+                R.id.FirstFragment, R.id.SecondFragment, R.id.logout), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        navView.findViewById<LinearLayout>(R.id.logout_layout).setOnClickListener { performLogout() }
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.drawable_icon_home)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        setUpUserName(navView)
+    }
+
+    private fun setUpUserName(navigationView: NavigationView){
+        val header = navigationView.getHeaderView(0)
+        val userNameTv = header.findViewById<TextView>(R.id.menu_user_email)
+        userNameTv.setText(getUser())
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_logout -> {
-                Firebase.auth.signOut()
-                startActivity(Intent(this, LoginActivity::class.java))
+                performLogout()
                 return true
             }
             android.R.id.home -> {
