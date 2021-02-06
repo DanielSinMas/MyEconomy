@@ -31,14 +31,11 @@ class LoginActivity : AppCompatActivity() {
     private val USERS_COLLECTION = "users"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
         auth = Firebase.auth
-        val user = auth.currentUser
-        if(user != null){
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-
+        checkUserLogged()
+        setTheme(R.style.AppTheme)
+        setContentView(R.layout.activity_login)
+        super.onCreate(savedInstanceState)
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -51,6 +48,13 @@ class LoginActivity : AppCompatActivity() {
         signInButton.setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, GOOGLE_SIGN_IN)
+        }
+    }
+
+    private fun checkUserLogged(){
+        val user = auth.currentUser
+        if(user != null){
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
