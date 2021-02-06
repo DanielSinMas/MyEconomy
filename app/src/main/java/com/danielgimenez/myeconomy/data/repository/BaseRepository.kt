@@ -16,7 +16,7 @@ open class BaseRepository {
             val expenseMap = expense.toMap(user)
             val db = Firebase.firestore
             val collection = db.collection(EXPENSES_COLLECTION)
-                    .document(user)
+                    .document()
                     .set(expenseMap)
         }
     }

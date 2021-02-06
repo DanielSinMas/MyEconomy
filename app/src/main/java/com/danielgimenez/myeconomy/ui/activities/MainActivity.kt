@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.FirstFragment, R.id.SecondFragment, R.id.logout), drawerLayout)
+                R.id.FirstFragment, R.id.SecondFragment), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.findViewById<LinearLayout>(R.id.logout_layout).setOnClickListener { performLogout() }
