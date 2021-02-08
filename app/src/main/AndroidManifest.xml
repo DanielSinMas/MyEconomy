@@ -14,9 +14,19 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyEconomy">
-        <activity android:name=".ui.activities.LoginActivity"
-            android:theme="@style/SplasTheme"
-            android:noHistory="true">
+        <activity android:name=".ui.activities.SplashScreen"
+            android:noHistory="true"
+            android:theme="@style/Theme.MyEconomy.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,8 +36,7 @@
         <activity
             android:name=".ui.activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MyEconomy.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.MyEconomy.NoActionBar" />
     </application>
 
 </manifest>

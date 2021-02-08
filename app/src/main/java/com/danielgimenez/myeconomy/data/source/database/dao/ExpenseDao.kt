@@ -1,6 +1,5 @@
 package com.danielgimenez.myeconomy.data.source.database.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.danielgimenez.myeconomy.data.entity.ExpenseEntity
 import com.danielgimenez.myeconomy.data.entity.converter.LocalDateConverter
