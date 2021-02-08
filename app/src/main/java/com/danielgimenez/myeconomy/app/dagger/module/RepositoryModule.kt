@@ -1,5 +1,6 @@
 package com.danielgimenez.myeconomy.app.dagger.module
 
+import com.danielgimenez.myeconomy.data.repository.ChartsRepository
 import com.danielgimenez.myeconomy.data.repository.ExpenseRepository
 import com.danielgimenez.myeconomy.data.repository.TypeRepository
 import com.danielgimenez.myeconomy.data.source.database.IDiskDataSource
@@ -23,4 +24,8 @@ class RepositoryModule{
     fun provideTypeRepository(context: App,
                             diskDataSource: IDiskDataSource,
                             networkDataSource: INetworkDataSource) = TypeRepository(context, diskDataSource, networkDataSource)
+
+    @Provides
+    @Singleton
+    fun provideChartsRepository(context: App, diskDataSource: IDiskDataSource, networkDataSource: INetworkDataSource) = ChartsRepository(context, diskDataSource, networkDataSource)
 }

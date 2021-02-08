@@ -9,13 +9,13 @@
         android:id="@+id/FirstFragment"
         android:name="com.danielgimenez.myeconomy.ui.activities.FormularyFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/formylary_fragment">
     </fragment>
 
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.danielgimenez.myeconomy.ui.activities.SecondFragment"
+        android:name="com.danielgimenez.myeconomy.ui.activities.ChartsFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/charts_fragment">
     </fragment>
 </navigation>

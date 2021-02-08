@@ -42,7 +42,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_first, container, false)
+        return inflater.inflate(R.layout.formylary_fragment, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
