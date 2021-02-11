@@ -18,7 +18,8 @@ class ChartsViewModel @Inject constructor(private val getChartsUseCase: GetChart
 
     fun getCharts(user: String, userId: String)= launchSilent(coroutineContext, exceptionHandler, job){
         val request = GetChartsRequest(user, userId)
-        getChartsUseCase.execute(request)
+        val result = getChartsUseCase.execute(request)
+        getChartsLiveData.postValue(result as SuccessGetChartsListState)
     }
 
     private val exceptionHandler = CoroutineExceptionHandler{_,_ ->

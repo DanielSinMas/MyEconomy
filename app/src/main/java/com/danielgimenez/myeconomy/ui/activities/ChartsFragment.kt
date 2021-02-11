@@ -11,6 +11,7 @@ import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.charts.ChartsFragmentModule
 import com.danielgimenez.myeconomy.ui.App
+import com.danielgimenez.myeconomy.ui.components.ChartsComponent
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ class ChartsFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var chartsViewModel: ChartsViewModel
+    private lateinit var chartsComponent: ChartsComponent
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +38,7 @@ class ChartsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         prepareViewModel()
+        chartsViewModel.getCharts("", "")
     }
 
     private fun prepareViewModel(){
@@ -47,7 +50,8 @@ class ChartsFragment : Fragment() {
         state.let {
             when(state){
                 is SuccessGetChartsListState -> {
-
+                    chartsComponent = view?.findViewById(R.id.charts_component)!!
+                    //chartsComponent.loadCharts()
                 }
                 is LoadingGetChartsListState -> {
 
