@@ -12,5 +12,9 @@
             android:id="@+id/SecondFragment"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/second_fragment" />
+
+        <item android:id="@+id/SettingsFragment"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/settings"/>
     </group>
 </menu>

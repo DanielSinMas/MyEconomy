@@ -18,4 +18,11 @@
         android:label="@string/second_fragment_label"
         tools:layout="@layout/charts_fragment">
     </fragment>
+
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.danielgimenez.myeconomy.ui.activities.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings">
+    </fragment>
 </navigation>

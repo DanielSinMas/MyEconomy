@@ -61,6 +61,12 @@ class LoginActivity : AppCompatActivity() {
                         .addOnCompleteListener(this){
                             if(it.isSuccessful){
                                 val user = auth.currentUser
+                                user?.getIdToken(true)?.addOnCompleteListener {
+                                    if(task.isSuccessful){
+                                        var token = it.result?.token
+                                        //send to server
+                                    }
+                                }
                                 insertUser(user)
                             }
                             else{
