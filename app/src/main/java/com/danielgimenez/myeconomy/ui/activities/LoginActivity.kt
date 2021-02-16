@@ -1,9 +1,11 @@
 package com.danielgimenez.myeconomy.ui.activities
 
 import android.content.Intent
+import android.graphics.Color.red
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.danielgimenez.myeconomy.R
@@ -14,12 +16,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -61,16 +65,18 @@ class LoginActivity : AppCompatActivity() {
                         .addOnCompleteListener(this){
                             if(it.isSuccessful){
                                 val user = auth.currentUser
-                                user?.getIdToken(true)?.addOnCompleteListener {
+                                /*user?.getIdToken(true)?.addOnCompleteListener {
                                     if(task.isSuccessful){
                                         var token = it.result?.token
-                                        //send to server
                                     }
-                                }
+                                }*/
                                 insertUser(user)
                             }
                             else{
-                                Toast.makeText(this, "Error:"+it.exception?.message, Toast.LENGTH_SHORT).show()
+                                Snackbar.make(signinbutton, "Error toh gordo kio", Snackbar.LENGTH_SHORT)
+                                        .setBackgroundTint(getColor(R.color.error_color))
+                                        .setTextColor(getColor(R.color.white))
+                                        .show()
                             }
                         }
             } catch (e: ApiException) {
