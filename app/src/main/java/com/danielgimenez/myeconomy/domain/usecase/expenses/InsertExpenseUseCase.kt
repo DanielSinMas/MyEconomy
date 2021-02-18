@@ -7,6 +7,6 @@ import com.danielgimenez.myeconomy.domain.usecase.BaseUseCase
 
 open class InsertExpenseUseCase(val repository: ExpenseRepository): BaseUseCase<InsertExpenseRequest, Expense>(){
     override suspend fun run(): Response<Expense> {
-        return repository.saveExpense(request!!)
+        return repository.insertExpense(request!!)
     }
 }
