@@ -3,6 +3,7 @@ package com.danielgimenez.myeconomy.ui.activities
 import android.content.Intent
 import android.graphics.Color.red
 import android.os.Bundle
+import android.text.AlteredCharSequence.make
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
@@ -60,28 +61,38 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
-                val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-                auth.signInWithCredential(credential)
-                        .addOnCompleteListener(this){
-                            if(it.isSuccessful){
-                                val user = auth.currentUser
-                                /*user?.getIdToken(true)?.addOnCompleteListener {
-                                    if(task.isSuccessful){
-                                        var token = it.result?.token
-                                    }
-                                }*/
-                                insertUser(user)
-                            }
-                            else{
-                                Snackbar.make(signinbutton, "Error toh gordo kio", Snackbar.LENGTH_SHORT)
-                                        .setBackgroundTint(getColor(R.color.error_color))
-                                        .setTextColor(getColor(R.color.white))
-                                        .show()
-                            }
-                        }
+                checkIfUserExists(account!!)
+
             } catch (e: ApiException) {
                 Log.w("Error", "signInResult:failed code=" + e.statusCode)
             }
+        }
+    }
+
+    private fun checkIfUserExists(account: GoogleSignInAccount){
+        val collection = db.collection(USERS_COLLECTION)
+        collection.whereEqualTo("email", account.email).get().addOnCompleteListener{
+            if(it.isSuccessful && it.result?.documents?.size!! > 0) {
+                //Usuario ya logueado
+            }
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            auth.signInWithCredential(credential)
+                    .addOnCompleteListener(this) {
+                        if (it.isSuccessful) {
+                            val user = auth.currentUser
+                            /*user?.getIdToken(true)?.addOnCompleteListener {
+                            if(task.isSuccessful){
+                                var token = it.result?.token
+                            }
+                        }*/
+                            insertUser(user)
+                        } else {
+                            Snackbar.make(signinbutton, "Error toh gordo kio", Snackbar.LENGTH_SHORT)
+                                    .setBackgroundTint(getColor(R.color.error_color))
+                                    .setTextColor(getColor(R.color.white))
+                                    .show()
+                        }
+                    }
         }
     }
 

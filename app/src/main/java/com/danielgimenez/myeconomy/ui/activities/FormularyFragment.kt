@@ -196,8 +196,11 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         val left = view.findViewById<ImageButton>(R.id.expense_header_left)
         val right = view.findViewById<ImageButton>(R.id.expense_header_right)
         val monthTv = view.findViewById<TextView>(R.id.expense_header_month)
+        val yearTv = view.findViewById<TextView>(R.id.expense_header_year)
         ExpenseAdapter.monthSelected = Calendar.getInstance()[Calendar.MONTH]
+        ExpenseAdapter.year = Calendar.getInstance()[Calendar.YEAR]
         monthTv.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
+        yearTv.text = ExpenseAdapter.year.toString()
         left?.setOnClickListener {
             val animation = AnimationUtils.loadAnimation(context, R.anim.slide_out_right)
             animation.setAnimationListener(object: Animation.AnimationListener{
@@ -205,9 +208,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                 }
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    ExpenseAdapter.monthSelected = ExpenseAdapter.monthSelected.minus(1)
-                    monthTv?.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
-                    onMonthChanged(ExpenseAdapter.monthSelected)
+                    ExpenseAdapter.changeMonth(-1)
+                    setDateAndTriggerMonthChanged(monthTv, yearTv)
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {
@@ -223,9 +225,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                 }
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    ExpenseAdapter.monthSelected = ExpenseAdapter.monthSelected.plus(1)
-                    monthTv?.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
-                    onMonthChanged(ExpenseAdapter.monthSelected)
+                    ExpenseAdapter.changeMonth(1)
+                    setDateAndTriggerMonthChanged(monthTv, yearTv)
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {
@@ -233,6 +234,12 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             })
             monthTv?.startAnimation(animation)
         }
+    }
+
+    private fun setDateAndTriggerMonthChanged(monthTv: TextView, yearTv: TextView) {
+        monthTv.text = ExpenseAdapter.MONTHS[ExpenseAdapter.monthSelected]
+        yearTv.text = ExpenseAdapter.year.toString()
+        onMonthChanged(ExpenseAdapter.monthSelected, ExpenseAdapter.year)
     }
 
     private fun sendEvents(response: Response.Success<Expense>) {
@@ -243,6 +250,6 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
 
     override fun onMonthChanged(month: Int, year: Int?) {
         Log.e("Month", "Selected: $month")
-        formularyViewModel.getExpensesByMonth(month+1)
+        formularyViewModel.getExpensesByDate(month+1, year!!)
     }
 }

@@ -154,6 +154,19 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
 
     companion object{
         var monthSelected = 0
+        var year = 0
         var MONTHS = arrayOf("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE")
+
+        fun changeMonth(variation: Int){
+            monthSelected += variation
+            if(monthSelected < 0){
+                monthSelected = 11
+                year -= 1
+            }
+            else if(monthSelected > 11){
+                monthSelected = 0
+                year++
+            }
+        }
     }
 }

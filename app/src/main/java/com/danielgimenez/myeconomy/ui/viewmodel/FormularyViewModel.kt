@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
 
 class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: InsertExpenseUseCase,
                                              private val getExpensesUseCase: GetExpensesUseCase,
-                                             private val getExpenseByMonthUseCase: GetExpenseByMonthUseCase,
+                                             private val getExpenseByMonthUseCase: GetExpenseByDateUseCase,
                                              private val getTypesUseCase: GetTypesUseCase,
                                              private val coroutineContext: CoroutineContext): ViewModel(){
 
@@ -35,8 +35,8 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
         getExpenseListLiveData.postValue(SuccessGetEntryListState(response))
     }
 
-    fun getExpensesByMonth(month: Int) = launchSilent(coroutineContext, exceptionHandler, job){
-        val request = GetExpensesByMonthRequest(month)
+    fun getExpensesByDate(month: Int, year: Int) = launchSilent(coroutineContext, exceptionHandler, job){
+        val request = GetExpensesByDateRequest(month, year)
         val response = getExpenseByMonthUseCase.execute(request)
         getExpenseListLiveData.postValue(SuccessGetEntryListState(response))
     }

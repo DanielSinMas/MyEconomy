@@ -4,7 +4,7 @@ import com.danielgimenez.myeconomy.data.repository.ChartsRepository
 import com.danielgimenez.myeconomy.data.repository.ExpenseRepository
 import com.danielgimenez.myeconomy.data.repository.TypeRepository
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsUseCase
-import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpenseByMonthUseCase
+import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpenseByDateUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseUseCase
 import com.danielgimenez.myeconomy.domain.usecase.types.GetTypesUseCase
@@ -21,7 +21,7 @@ class DomainModule{
     fun provideGetExpensesUseCase(repository: ExpenseRepository) = GetExpensesUseCase(repository)
 
     @Provides
-    fun provideGetExpensesByMonthUseCase(repository: ExpenseRepository) = GetExpenseByMonthUseCase(repository)
+    fun provideGetExpensesByMonthUseCase(repository: ExpenseRepository) = GetExpenseByDateUseCase(repository)
 
     @Provides
     fun provideGetTypesUseCase(repository: TypeRepository) = GetTypesUseCase(repository)

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/date_header"
-            android:background="@color/date_header_background">
+            android:background="@color/recyclerBackgroundColor">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,7 +31,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:src="@drawable/arrow_left"
-                    android:background="@drawable/date_button_background"/>
+                    android:background="@drawable/date_button_background"
+                    android:backgroundTint="@color/date_header_background"/>
 
             </LinearLayout>
 
@@ -50,11 +51,20 @@
                     android:layout_weight="1"
                     android:text="November"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:textSize="18sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/expense_header_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="2020"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,9 +78,11 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:src="@drawable/arrow_right"
-                    android:background="@drawable/date_button_background"/>
+                    android:background="@drawable/date_button_background"
+                    android:backgroundTint="@color/date_header_background"/>
 
             </LinearLayout>
+
 
         </LinearLayout>
 
