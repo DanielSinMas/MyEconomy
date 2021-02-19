@@ -9,11 +9,11 @@ import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesByDateRequ
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
 import java.time.LocalDate
 
-class ExpenseRepository(private val context: Context,
-                        private val diskDataSource: IDiskDataSource,
-                        private val networkDataSource: INetworkDataSource): BaseRepository() {
+open class ExpenseRepository(private val context: Context,
+                             private val diskDataSource: IDiskDataSource,
+                             private val networkDataSource: INetworkDataSource): BaseRepository() {
 
-    fun saveExpense(request: InsertExpenseRequest): Response.Success<Expense> {
+    fun insertExpense(request: InsertExpenseRequest): Response.Success<Expense> {
         val result = diskDataSource.insertExpense(request.expense.toEntity())
         saveExpense(context, request.expense)
         return Response.Success(request.expense)
