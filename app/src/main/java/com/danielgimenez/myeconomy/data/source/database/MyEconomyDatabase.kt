@@ -11,6 +11,9 @@ import com.danielgimenez.myeconomy.data.entity.TypeEntity
 import com.danielgimenez.myeconomy.data.entity.converter.LocalDateConverter
 import com.danielgimenez.myeconomy.data.source.database.dao.ExpenseDao
 import com.danielgimenez.myeconomy.data.source.database.dao.TypeDao
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 
 @Database(entities = [ExpenseEntity::class, TypeEntity::class], version = 1)
@@ -28,9 +31,9 @@ abstract class MyEconomyDatabase: RoomDatabase(){
             INSTANCE ?: synchronized(this){
                 val rdc: Callback = object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
-                        db.execSQL("INSERT INTO EXPENSE_TYPES (name) VALUES ('Facturas')")
-                        db.execSQL("INSERT INTO EXPENSE_TYPES (name) VALUES ('Comida')")
-                        db.execSQL("INSERT INTO EXPENSE_TYPES (name) VALUES ('Entretenimiento')")
+                        //db.execSQL("INSERT INTO EXPENSE_TYPES (name) VALUES ('Facturas')")
+                        //db.execSQL("INSERT INTO EXPENSE_TYPES (name) VALUES ('Comida')")
+                        //db.execSQL("INSERT INTO EXPENSE_TYPES (name) VALUES ('Entretenimiento')")
                     }
 
                     override fun onOpen(db: SupportSQLiteDatabase) {
@@ -46,6 +49,14 @@ abstract class MyEconomyDatabase: RoomDatabase(){
                     .build()
             }
             return INSTANCE
+        }
+
+        suspend fun dropDatabase(){
+            coroutineScope {
+                launch {
+                    INSTANCE?.clearAllTables()
+                }
+            }
         }
     }
 }

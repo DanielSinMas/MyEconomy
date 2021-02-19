@@ -5,6 +5,8 @@ import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFr
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.charts.ChartsFragmentComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.charts.ChartsFragmentModule
+import com.danielgimenez.myeconomy.app.dagger.subcomponent.login.LoginActivityComponent
+import com.danielgimenez.myeconomy.app.dagger.subcomponent.login.LoginActivityModule
 import com.danielgimenez.myeconomy.app.dagger.viewmodel.ViewModelFactoryModule
 import com.danielgimenez.myeconomy.app.dagger.viewmodel.ViewModelModule
 import dagger.Component
@@ -22,4 +24,5 @@ import javax.inject.Singleton
 interface ApplicationComponent {
     fun plus(module: FormularyFragmentModule): FormularyFragmentComponent
     fun plus(module: ChartsFragmentModule): ChartsFragmentComponent
+    fun plus(module: LoginActivityModule): LoginActivityComponent
 }

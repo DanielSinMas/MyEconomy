@@ -8,6 +8,7 @@ import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpenseByDateUseCa
 import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseUseCase
 import com.danielgimenez.myeconomy.domain.usecase.types.GetTypesUseCase
+import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -28,4 +29,7 @@ class DomainModule{
 
     @Provides
     fun providesGetChartsUseCase(repository: ChartsRepository) = GetChartsUseCase(repository)
+
+    @Provides
+    fun providesInsertTypeUseCase(repository: TypeRepository) = InsertTypeUseCase(repository)
 }
