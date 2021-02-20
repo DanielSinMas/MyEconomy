@@ -51,12 +51,8 @@ abstract class MyEconomyDatabase: RoomDatabase(){
             return INSTANCE
         }
 
-        suspend fun dropDatabase(){
-            coroutineScope {
-                launch {
-                    INSTANCE?.clearAllTables()
-                }
-            }
+        fun dropDatabase(){
+            INSTANCE?.clearAllTables()
         }
     }
 }
