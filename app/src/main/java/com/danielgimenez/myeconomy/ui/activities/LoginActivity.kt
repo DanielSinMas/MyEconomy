@@ -3,7 +3,6 @@ package com.danielgimenez.myeconomy.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,10 +10,12 @@ import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.login.LoginActivityModule
-import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.ui.App
 import com.danielgimenez.myeconomy.ui.viewmodel.*
-import com.danielgimenez.myeconomy.utils.saveUser
+import com.danielgimenez.myeconomy.ui.viewmodel.states.ErrorLoginState
+import com.danielgimenez.myeconomy.ui.viewmodel.states.LoadingLogintState
+import com.danielgimenez.myeconomy.ui.viewmodel.states.LoginState
+import com.danielgimenez.myeconomy.ui.viewmodel.states.SuccessLogintState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -23,7 +24,6 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -74,36 +74,20 @@ class LoginActivity : AppCompatActivity() {
 
     private fun prepareViewModel(){
         loginViewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
-        loginViewModel.insertTypeLiveData.observe(this, insertTypeOberserver)
-        loginViewModel.getExpensesLiveData.observe(this, getExpenseObserver)
+        loginViewModel.loginLiveData.observe(this, loginObserver)
     }
 
-    private var insertTypeOberserver = Observer<InsertTypeState> { state ->
+    private var loginObserver = Observer<LoginState>{ state ->
         state.let {
             when(state){
-                is SuccessInsertTypetState -> {
-                    insertTypesInFirestore((it.response as Response.Success).data)
+                is SuccessLogintState -> {
+                    var data = it.response as Response.Success
+                    Log.e("Expenses", ""+data.data.expenses.size)
                 }
-                is LoadingInsertTypetState -> {
+                is LoadingLogintState -> {
 
                 }
-                is ErrorInsertTypeState -> {
-
-                }
-            }
-        }
-    }
-
-    private var getExpenseObserver = Observer<GetExpenseListState> { state ->
-        state.let{
-            when(state){
-                is SuccessGetEntryListState -> {
-                    initiateMainActivity()
-                }
-                is LoadingGetEntryListState -> {
-
-                }
-                is ErrorGetEntryListState -> {
+                is ErrorLoginState -> {
 
                 }
             }
@@ -120,66 +104,36 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
-                checkIfUserExists(account!!)
+                doLogin(account!!)
             } catch (e: ApiException) {
                 Log.w("Error", "signInResult:failed code=" + e.statusCode)
             }
         }
     }
 
-    private fun checkIfUserExists(account: GoogleSignInAccount){
-        val collection = db.collection(USERS_COLLECTION)
-        collection.whereEqualTo("email", account.email).get().addOnCompleteListener{
-            isNewUser = it.isSuccessful && it.result?.documents?.size!! == 0
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-            auth.signInWithCredential(credential)
-                    .addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-                            val user = auth.currentUser
-                            insertUser(user)
-                        } else {
-                            Snackbar.make(signinbutton, "Error toh gordo kio", Snackbar.LENGTH_SHORT)
-                                    .setBackgroundTint(getColor(R.color.error_color))
-                                    .setTextColor(getColor(R.color.white))
-                                    .show()
+    private fun doLogin(account: GoogleSignInAccount){
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) {
+                if (it.isSuccessful) {
+                    val user = auth.currentUser
+                    user?.getIdToken(true)!!.addOnCompleteListener{
+                        if(it.isSuccessful){
+                            var token = it.result!!.token
+                            getDataForUser(token!!)
                         }
                     }
-        }
-    }
-
-    private fun insertUser(user: FirebaseUser?){
-        val userMap = hashMapOf(
-            "email" to user?.email
-        )
-        db.collection(USERS_COLLECTION)
-            .document(user?.email!!)
-            .set(userMap)
-            .addOnSuccessListener {
-                saveUser(user)
-                if(isNewUser){
-                    //Preguntar por tipos y luego insertar
-                    val type = Type(1, "Facturas")
-                    val type2 = Type(2, "Comida")
-                    val type3 = Type(3, "Entretenimiento")
-                    loginViewModel.insertTypes(listOf(type, type2, type3))
-                }
-                else{
-                    loginViewModel.getDataFromFirestoreAndSaveLocally(user.email!!)
+                } else {
+                    Snackbar.make(signinbutton, "Error toh gordo kio", Snackbar.LENGTH_SHORT)
+                            .setBackgroundTint(getColor(R.color.error_color))
+                            .setTextColor(getColor(R.color.white))
+                            .show()
                 }
             }
     }
 
-    private fun insertTypesInFirestore(list: List<Type>){
-        val user = auth.currentUser?.email!!
-        db.runTransaction { transaction ->
-            list.map { type ->
-                transaction.set(db.collection(TYPES_COLLECTION).document(), type.toMap(user))
-            }
-        }.addOnSuccessListener {
-            initiateMainActivity()
-        }.addOnFailureListener{
-            Toast.makeText(this, "Todo mal kio", Toast.LENGTH_SHORT).show()
-        }
+    private fun getDataForUser(id_token: String){
+        loginViewModel.getDataForUser(id_token)
     }
 
     private fun initiateMainActivity(){

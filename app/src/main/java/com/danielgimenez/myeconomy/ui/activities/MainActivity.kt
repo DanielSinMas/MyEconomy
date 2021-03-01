@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpUserName(navigationView: NavigationView){
         val header = navigationView.getHeaderView(0)
         val userNameTv = header.findViewById<TextView>(R.id.menu_user_email)
-        userNameTv.setText(getUser())
+        userNameTv.text = getUser()
 
     }
 
