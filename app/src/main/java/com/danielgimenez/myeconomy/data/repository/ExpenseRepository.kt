@@ -15,7 +15,7 @@ open class ExpenseRepository(private val context: Context,
 
     fun insertExpense(request: InsertExpenseRequest): Response.Success<Expense> {
         val result = diskDataSource.insertExpense(request.expense.toEntity())
-        saveExpense(context, request.expense)
+        //saveExpense(context, request.expense)
         return Response.Success(request.expense)
     }
 

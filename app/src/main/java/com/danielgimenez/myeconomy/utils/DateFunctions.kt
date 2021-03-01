@@ -32,6 +32,16 @@ class DateFunctions{
             }
         }
 
+        fun parseDateFromFirestore(date: String): LocalDate?{
+            val split = date.split("-")
+            try{
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                return LocalDate.parse(date, formatter)
+            } catch (e: Exception){
+                return null
+            }
+        }
+
         fun getDateToShow(date: String): String {
             val split = date.split("-")
             return split[2]+"/"+split[1]

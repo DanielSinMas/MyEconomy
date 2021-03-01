@@ -75,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
     private fun prepareViewModel(){
         loginViewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
         loginViewModel.insertTypeLiveData.observe(this, insertTypeOberserver)
+        loginViewModel.getExpensesLiveData.observe(this, getExpenseObserver)
     }
 
     private var insertTypeOberserver = Observer<InsertTypeState> { state ->
@@ -93,6 +94,22 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private var getExpenseObserver = Observer<GetExpenseListState> { state ->
+        state.let{
+            when(state){
+                is SuccessGetEntryListState -> {
+                    initiateMainActivity()
+                }
+                is LoadingGetEntryListState -> {
+
+                }
+                is ErrorGetEntryListState -> {
+
+                }
+            }
+        }
+    }
+
     private fun setUpInjection(applicationComponent: ApplicationComponent){
         applicationComponent.plus(LoginActivityModule(this)).injectInto(this)
     }
@@ -104,7 +121,6 @@ class LoginActivity : AppCompatActivity() {
             try {
                 val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
                 checkIfUserExists(account!!)
-
             } catch (e: ApiException) {
                 Log.w("Error", "signInResult:failed code=" + e.statusCode)
             }
@@ -148,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
                     loginViewModel.insertTypes(listOf(type, type2, type3))
                 }
                 else{
-                    initiateMainActivity()
+                    loginViewModel.getDataFromFirestoreAndSaveLocally(user.email!!)
                 }
             }
     }
