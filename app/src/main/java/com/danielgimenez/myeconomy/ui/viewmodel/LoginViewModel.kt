@@ -22,16 +22,12 @@ class LoginViewModel @Inject constructor(val loginRepository: LoginRepository,
 
     private val job = Job()
 
-    var insertTypeLiveData = MutableLiveData<InsertTypeState>()
-    var getExpensesLiveData = MutableLiveData<GetExpenseListState>()
     val loginLiveData = MutableLiveData<LoginState>()
 
-    fun getDataForUser(id_token: String){
+    fun getDataForUser(id_token: String) = launchSilent(coroutineContext, exceptionHandler, job){
         loginLiveData.postValue(LoadingLogintState(null))
-        viewModelScope.launch{
-            val data = loginRepository.getDataForUser(id_token)
-            loginLiveData.postValue(SuccessLogintState(data))
-        }
+        val data = loginRepository.getDataForUser(id_token)
+        loginLiveData.postValue(SuccessLogintState(data))
     }
 
     private val exceptionHandler = CoroutineExceptionHandler{_,_ ->
