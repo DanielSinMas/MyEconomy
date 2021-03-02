@@ -81,14 +81,17 @@ class LoginActivity : AppCompatActivity() {
         state.let {
             when(state){
                 is SuccessLogintState -> {
-                    var data = it.response as Response.Success
-                    Log.e("Expenses", ""+data.data.expenses.size)
+                    initiateMainActivity()
                 }
                 is LoadingLogintState -> {
 
                 }
                 is ErrorLoginState -> {
-
+                    var error = (state.response as Response.Error)
+                    Snackbar.make(signinbutton, error.exception.message!!, Snackbar.LENGTH_SHORT)
+                            .setBackgroundTint(getColor(R.color.error_color))
+                            .setTextColor(getColor(R.color.white))
+                            .show()
                 }
             }
         }
