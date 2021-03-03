@@ -24,6 +24,19 @@ fun Activity.saveUser(user: FirebaseUser){
     }
 }
 
+fun Activity.saveIdToken(token: String){
+    val sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+    with(sharedPref.edit()){
+        putString("token", token)
+        commit()
+    }
+}
+
+fun Activity.getIdToken(): String? {
+    val sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+    return sharedPref.getString("token", null)
+}
+
 fun Activity.getUser(): String? {
     val sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
     return sharedPref.getString("user", null)

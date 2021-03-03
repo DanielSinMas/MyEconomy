@@ -41,7 +41,7 @@ class APIModule{
     fun provideClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val userAgent = "TecTrack/${BuildConfig.VERSION_NAME} (${Build.BRAND} ${Build.MODEL}; Android/${Build.VERSION.RELEASE})"
+        val userAgent = "Myeconomy/${BuildConfig.VERSION_NAME} (${Build.BRAND} ${Build.MODEL}; Android/${Build.VERSION.RELEASE})"
 
         return OkHttpClient.Builder().readTimeout(30000, TimeUnit.MILLISECONDS).connectTimeout(30000, TimeUnit.MILLISECONDS)
             .addInterceptor(interceptor)

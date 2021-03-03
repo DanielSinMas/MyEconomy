@@ -6,6 +6,7 @@ import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.data.repository.ExpenseRepository
 import com.danielgimenez.myeconomy.data.repository.LoginRepository
 import com.danielgimenez.myeconomy.data.repository.TypeRepository
+import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
 import com.danielgimenez.myeconomy.domain.usecase.login.GetDataForUserResponse
 import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeRequest
@@ -18,10 +19,10 @@ import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class LoginViewModel @Inject constructor(val loginRepository: LoginRepository,
-                                         val typeRepository: TypeRepository,
-                                         val expenseRepository: ExpenseRepository,
-                                        private val coroutineContext: CoroutineContext): ViewModel() {
+class LoginViewModel @Inject constructor(private val loginRepository: LoginRepository,
+                                         private val typeRepository: TypeRepository,
+                                         private val expenseRepository: ExpenseRepository,
+                                         private val coroutineContext: CoroutineContext): ViewModel() {
 
     private val job = Job()
 
@@ -43,9 +44,14 @@ class LoginViewModel @Inject constructor(val loginRepository: LoginRepository,
                 typeRepository.insertType(InsertTypeRequest(type))
             }
         }
+        else if(response.types.size == 0){
+            typeRepository.insertType(InsertTypeRequest(Type(1, "Facturas")))
+            typeRepository.insertType(InsertTypeRequest(Type(2, "Comida")))
+            typeRepository.insertType(InsertTypeRequest(Type(3, "Entretenimiento")))
+        }
         if(response.expenses != null && response.expenses.size > 0){
             var expensesResult = response.expenses.map { expense ->
-                expenseRepository.insertExpense(InsertExpenseRequest(expense.toExpense()))
+                expenseRepository.saveExpenseLocally(listOf(expense.toExpense()))
             }
         }
         loginLiveData.postValue(SuccessLogintState(data))

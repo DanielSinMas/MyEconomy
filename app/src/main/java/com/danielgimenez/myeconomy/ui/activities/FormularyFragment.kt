@@ -24,7 +24,9 @@ import com.danielgimenez.myeconomy.ui.components.ExpensesComponent
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.danielgimenez.myeconomy.utils.DateFunctions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
 import javax.inject.Inject
 
@@ -85,7 +87,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             when(state){
                 is SuccessAddEntryListState -> {
                     val response = it.response as Response.Success
-                    expensesComponent?.addExpense(response.data)
+                    expensesComponent?.addExpense(response.data[0])
                     sendEvents(response)
                     Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
                     if(dialog?.isShowing!!) dialog?.dismiss()
@@ -94,7 +96,12 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
 
                 }
                 is ErrorAddEntryListState -> {
-
+                    val floating = view?.findViewById<FloatingActionButton>(R.id.fab)
+                    val error = it.response as Response.Error
+                    Snackbar.make(floating!!, error.exception.message!!, Snackbar.LENGTH_SHORT)
+                            .setBackgroundTint(context?.getColor(R.color.error_color)!!)
+                            .setTextColor(context?.getColor(R.color.white)!!)
+                            .show()
                 }
             }
         }
@@ -157,6 +164,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                     localdate
                 )
                 formularyViewModel.insertExpense(expense)
+                dialog?.dismiss()
             }
         }
         dialog = builder.show()
@@ -242,7 +250,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         onMonthChanged(ExpenseAdapter.monthSelected, ExpenseAdapter.year)
     }
 
-    private fun sendEvents(response: Response.Success<Expense>) {
+    private fun sendEvents(response: Response.Success<List<Expense>>) {
         response.data.let {
             (context as MainActivity).sendEvent("Expense", "Factura")
         }

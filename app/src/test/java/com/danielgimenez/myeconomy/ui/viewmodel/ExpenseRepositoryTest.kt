@@ -38,7 +38,7 @@ class ExpenseRepositoryTest {
     fun `GIVEN expense WHEN insertExpense is called THEN success is returned`(){
         runBlockingTest {
             val request = InsertExpenseRequest(Expense(1.2f, "description", 1, LocalDate.now()))
-            val response = expenseRepository.insertExpense(request)
+            val response = expenseRepository.saveExpenseLocally(request)
             Assert.assertTrue(response is Response.Success)
         }
     }

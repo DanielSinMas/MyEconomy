@@ -16,6 +16,7 @@ import com.danielgimenez.myeconomy.ui.viewmodel.states.ErrorLoginState
 import com.danielgimenez.myeconomy.ui.viewmodel.states.LoadingLogintState
 import com.danielgimenez.myeconomy.ui.viewmodel.states.LoginState
 import com.danielgimenez.myeconomy.ui.viewmodel.states.SuccessLogintState
+import com.danielgimenez.myeconomy.utils.saveIdToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -42,10 +43,6 @@ class LoginActivity : AppCompatActivity() {
     private val GOOGLE_SIGN_IN = 100
     private lateinit var auth: FirebaseAuth
     private lateinit var gso: GoogleSignInOptions
-    private var db = Firebase.firestore
-    private val USERS_COLLECTION = "users"
-    private val TYPES_COLLECTION = "types"
-    private var isNewUser = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_login)
@@ -122,8 +119,9 @@ class LoginActivity : AppCompatActivity() {
                     val user = auth.currentUser
                     user?.getIdToken(true)!!.addOnCompleteListener{
                         if(it.isSuccessful){
-                            var token = it.result!!.token
-                            getDataForUser(token!!)
+                            val token = it.result!!.token
+                            saveIdToken(token!!)
+                            getDataForUser(token)
                         }
                     }
                 } else {

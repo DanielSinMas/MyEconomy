@@ -25,9 +25,14 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
     var getExpenseListLiveData = MutableLiveData<GetExpenseListState>()
 
     fun insertExpense(expense: Expense) = launchSilent(coroutineContext, exceptionHandler, job){
-        val request = InsertExpenseRequest(expense)
+        val request = InsertExpenseRequest(listOf(expense.toRequest()))
         val response = insertExpenseUseCase.execute(request)
-        addExpenseListLiveData.postValue(SuccessAddEntryListState(response))
+        if(response is Response.Success) {
+            addExpenseListLiveData.postValue(SuccessAddEntryListState(response))
+        }
+        else if(response is Response.Error){
+            addExpenseListLiveData.postValue(ErrorAddEntryListState(response))
+        }
     }
 
     fun getExpenses() = launchSilent(coroutineContext, exceptionHandler, job){

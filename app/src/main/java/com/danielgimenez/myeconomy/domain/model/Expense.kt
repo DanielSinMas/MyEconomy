@@ -22,4 +22,6 @@ data class Expense(val amount: Float, val description: String, val type: Int, va
             "date" to date.toString(),
             "user" to user
         )
+
+    fun toRequest() = ExpenseRequest(amount, description, type, date.toString())
 }

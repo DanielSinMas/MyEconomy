@@ -1,6 +1,7 @@
 package com.danielgimenez.myeconomy.data.repository
 
 import android.content.Context
+import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.data.source.database.IDiskDataSource
 import com.danielgimenez.myeconomy.data.source.network.INetworkDataSource
@@ -13,10 +14,22 @@ open class ExpenseRepository(private val context: Context,
                              private val diskDataSource: IDiskDataSource,
                              private val networkDataSource: INetworkDataSource): BaseRepository() {
 
-    fun insertExpense(request: InsertExpenseRequest): Response.Success<Expense> {
-        val result = diskDataSource.insertExpense(request.expense.toEntity())
-        //saveExpense(context, request.expense)
-        return Response.Success(request.expense)
+    fun saveExpenseLocally(list: List<Expense>): Response.Success<List<Expense>> {
+        list.map { expense ->
+            diskDataSource.insertExpense(expense.toEntity())
+        }
+        return Response.Success(list)
+    }
+
+    suspend fun insertExpense(request: InsertExpenseRequest): Response<List<Expense>> {
+        val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        val token = sharedPref.getString("token", null)
+        if(token != null) {
+            return networkDataSource.insertExpense(token, request)
+        }
+        else{
+            return Response.Error(Exception())
+        }
     }
 
     fun getExpenses(): Response.Success<List<Expense>> {
