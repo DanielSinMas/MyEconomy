@@ -18,6 +18,7 @@ import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
 import com.danielgimenez.myeconomy.domain.model.Expense
+import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.ui.App
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
 import com.danielgimenez.myeconomy.ui.components.ExpensesComponent
@@ -87,8 +88,12 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             when(state){
                 is SuccessAddEntryListState -> {
                     val response = it.response as Response.Success
-                    expensesComponent?.addExpense(response.data[0])
-                    sendEvents(response)
+                    response.data.expenses.map {
+                        expensesComponent?.addExpense(it.toExpense())
+                    }
+                    sendEvents(response.data.expenses.map { expense ->
+                        expense.toExpense() 
+                    })
                     Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
                     if(dialog?.isShowing!!) dialog?.dismiss()
                 }
@@ -144,7 +149,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         val description = dialogView.findViewById<TextInputEditText>(R.id.formulary_description_text)
         val date = dialogView.findViewById<TextInputEditText>(R.id.formulary_date_text)
         date.setText(DateFunctions.formatDate(Calendar.getInstance(), requireContext()))
-        val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, formularyViewModel.getTypes())
+        val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, formularyViewModel.getTypes().map { it.name })
         selector.adapter = adapter
         date.setOnClickListener {
             createDatePicker(date)
@@ -250,8 +255,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         onMonthChanged(ExpenseAdapter.monthSelected, ExpenseAdapter.year)
     }
 
-    private fun sendEvents(response: Response.Success<List<Expense>>) {
-        response.data.let {
+    private fun sendEvents(response: List<Expense>) {
+        response.let {
             (context as MainActivity).sendEvent("Expense", "Factura")
         }
     }

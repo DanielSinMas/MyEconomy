@@ -6,7 +6,6 @@ import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.ui.adapter.viewholders.ExpenseViewHolder
 import com.danielgimenez.myeconomy.ui.adapter.viewholders.TypeViewHolder
-import com.danielgimenez.myeconomy.ui.viewmodel.FormularyViewModel
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 
@@ -45,7 +44,14 @@ class NewExpenseAdapter(var group: ArrayList<ExpenseTypeGroup>): ExpandableRecyc
     fun addExpense(expense: Expense){
         if(expense.date.month.value == ExpenseAdapter.monthSelected +1) {
             for(expenseType in group){
-                if(expenseType.type == FormularyViewModel.types.get(expense.type-1).name) expenseType.items.add(expense)
+                if(expenseType.type.localId == expense.type){
+                    expenseType.items.add(expense)
+                }
+                /*for (type in FormularyViewModel.types){
+                    if(type.id == expense.type && expenseType.type.equals(type.name)){
+                        expenseType.items.add(expense)
+                    }
+                }*/
             }
         }
         notifyDataSetChanged()

@@ -21,7 +21,9 @@ open class DiskDataSource(context: Context): IDiskDataSource(){
     override fun insertExpense(entity: ExpenseEntity): Long? { return database?.expenseDao()?.insert(entity)}
 
     //TYPES
-    override fun insertType(entity: TypeEntity): Long? { return database?.typeDao()?.insert(entity)}
+    override fun insertType(entity: TypeEntity): Long? {
+        return database?.typeDao()?.insert(entity)
+    }
 
     override fun getTypes(): List<TypeEntity>? { return database?.typeDao()?.getTypes()}
 

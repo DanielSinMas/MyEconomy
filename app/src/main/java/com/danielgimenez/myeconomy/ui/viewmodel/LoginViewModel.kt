@@ -15,6 +15,8 @@ import com.danielgimenez.myeconomy.ui.viewmodel.states.LoadingLogintState
 import com.danielgimenez.myeconomy.ui.viewmodel.states.LoginState
 import com.danielgimenez.myeconomy.ui.viewmodel.states.SuccessLogintState
 import com.danielgimenez.myeconomy.utils.launchSilent
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -44,15 +46,21 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
                 typeRepository.insertType(InsertTypeRequest(type))
             }
         }
-        else if(response.types.size == 0){
-            typeRepository.insertType(InsertTypeRequest(Type(1, "Facturas")))
-            typeRepository.insertType(InsertTypeRequest(Type(2, "Comida")))
-            typeRepository.insertType(InsertTypeRequest(Type(3, "Entretenimiento")))
+        else if(response.types == null || response.types.size == 0){
+            typeRepository.insertType(InsertTypeRequest(Type(1, "Facturas", 1)))
+            typeRepository.insertType(InsertTypeRequest(Type(2, "Comida", 2)))
+            typeRepository.insertType(InsertTypeRequest(Type(3, "Entretenimiento", 3)))
         }
         if(response.expenses != null && response.expenses.size > 0){
             var expensesResult = response.expenses.map { expense ->
                 expenseRepository.saveExpenseLocally(listOf(expense.toExpense()))
             }
+        }
+
+        if(response.new_user){
+            var db = Firebase.firestore
+            var user = hashMapOf("email" to "danielgimeneztorres@gmail.com")
+            db.collection("users").document().set(user)
         }
         loginLiveData.postValue(SuccessLogintState(data))
     }

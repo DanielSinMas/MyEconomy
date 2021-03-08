@@ -51,9 +51,9 @@ class FormularyViewModel @Inject constructor(private val insertExpenseUseCase: I
         types = (response as Response.Success).data
     }
 
-    fun getTypes() = types.map { it.name }
-    fun getTypeFromId(id: Int) = types.first{it.id == id}.name
-    fun getId(type: String) = types.first { it.name == type }.id
+    fun getTypes() = types
+    fun getTypeFromId(id: Int) = types.first{it.localId == id}.name
+    fun getId(type: String) = types.first { it.name == type }.localId
 
     private val exceptionHandler = CoroutineExceptionHandler{_,_ ->
     }

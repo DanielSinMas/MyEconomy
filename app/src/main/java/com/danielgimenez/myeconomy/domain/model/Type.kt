@@ -2,10 +2,10 @@ package com.danielgimenez.myeconomy.domain.model
 
 import com.danielgimenez.myeconomy.data.entity.TypeEntity
 
-data class Type(val id: Int, val name: String){
+data class Type(val id: Int, val name: String, val localId: Int){
 
     fun toEntity(): TypeEntity{
-        var entity = TypeEntity(name)
+        var entity = TypeEntity(name, localId)
         return entity
     }
 
@@ -13,6 +13,7 @@ data class Type(val id: Int, val name: String){
         hashMapOf(
                 "id" to id,
                 "name" to name,
+                "localid" to localId,
                 "user" to user
         )
 }

@@ -8,6 +8,7 @@ import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsRequest
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsResponse
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
+import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseResponse
 import com.danielgimenez.myeconomy.domain.usecase.login.GetDataForUserResponse
 import okhttp3.internal.waitMillis
 import java.lang.Exception
@@ -46,7 +47,7 @@ class NetworkDataSource(private val context: Context, private val api: MyEconomy
         }
     }
 
-    override suspend fun insertExpense(id_token: String, insertExpenseRequest: InsertExpenseRequest): Response<List<Expense>> {
+    override suspend fun insertExpense(id_token: String, insertExpenseRequest: InsertExpenseRequest): Response<InsertExpenseResponse> {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val isConnected = cm.activeNetworkInfo.isConnected
         if(isConnected){

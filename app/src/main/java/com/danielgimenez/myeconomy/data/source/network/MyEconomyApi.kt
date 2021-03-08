@@ -5,6 +5,7 @@ import com.danielgimenez.myeconomy.domain.model.ExpenseRequest
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsRequest
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsResponse
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
+import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseResponse
 import com.danielgimenez.myeconomy.domain.usecase.login.GetDataForUserResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
@@ -35,5 +36,5 @@ interface MyEconomyApi {
     fun insertExpense(
             @Header(HEADER_USER) id_token: String,
             @Body expenses: InsertExpenseRequest
-    ): Deferred<List<Expense>>
+    ): Deferred<InsertExpenseResponse>
 }

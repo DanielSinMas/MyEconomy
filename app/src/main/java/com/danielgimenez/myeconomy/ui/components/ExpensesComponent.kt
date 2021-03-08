@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.domain.model.Expense
+import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseTypeGroup
 import com.danielgimenez.myeconomy.ui.adapter.NewExpenseAdapter
@@ -21,7 +22,7 @@ class ExpensesComponent @JvmOverloads constructor(
 
     private var recycler: RecyclerView
     private lateinit var listener: ExpenseAdapter.ChangeMonthListener
-    private var types: List<String>? = ArrayList<String>()
+    private var types: List<Type>? = ArrayList<Type>()
 
     init{
         val view = LayoutInflater.from(context).inflate(R.layout.expenses_component_layout, this, true)
@@ -50,7 +51,7 @@ class ExpensesComponent @JvmOverloads constructor(
 
     }
 
-    fun setTypes(types: List<String>){
+    fun setTypes(types: List<Type>){
         this.types = types
     }
 }

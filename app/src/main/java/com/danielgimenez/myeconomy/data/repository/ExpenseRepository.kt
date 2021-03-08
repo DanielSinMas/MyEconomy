@@ -8,6 +8,7 @@ import com.danielgimenez.myeconomy.data.source.network.INetworkDataSource
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesByDateRequest
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
+import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseResponse
 import java.time.LocalDate
 
 open class ExpenseRepository(private val context: Context,
@@ -21,11 +22,16 @@ open class ExpenseRepository(private val context: Context,
         return Response.Success(list)
     }
 
-    suspend fun insertExpense(request: InsertExpenseRequest): Response<List<Expense>> {
+    suspend fun insertExpense(request: InsertExpenseRequest): Response<InsertExpenseResponse> {
         val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         val token = sharedPref.getString("token", null)
         if(token != null) {
-            return networkDataSource.insertExpense(token, request)
+            val response = networkDataSource.insertExpense(token, request)
+            if(response is Response.Success){
+                val expenses = response.data.expenses.map { it.toExpense() }
+                saveExpenseLocally(expenses)
+            }
+            return response
         }
         else{
             return Response.Error(Exception())

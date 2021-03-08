@@ -17,16 +17,16 @@ class SplashScreen : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
         auth = Firebase.auth
         checkUserLogged()
-
     }
 
     private fun checkUserLogged(){
         val user = auth.currentUser
-        if(user != null){
+        startActivity(Intent(this, LoginActivity::class.java))
+        /*if(user != null){
             startActivity(Intent(this, MainActivity::class.java))
         }
         else{
             startActivity(Intent(this, LoginActivity::class.java))
-        }
+        }*/
     }
 }

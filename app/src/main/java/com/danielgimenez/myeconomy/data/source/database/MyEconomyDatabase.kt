@@ -5,18 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.danielgimenez.myeconomy.data.entity.ExpenseEntity
 import com.danielgimenez.myeconomy.data.entity.TypeEntity
 import com.danielgimenez.myeconomy.data.entity.converter.LocalDateConverter
 import com.danielgimenez.myeconomy.data.source.database.dao.ExpenseDao
 import com.danielgimenez.myeconomy.data.source.database.dao.TypeDao
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 
 
-@Database(entities = [ExpenseEntity::class, TypeEntity::class], version = 1)
+@Database(entities = [ExpenseEntity::class, TypeEntity::class], version = 2)
 @TypeConverters(LocalDateConverter::class)
 abstract class MyEconomyDatabase: RoomDatabase(){
     abstract fun expenseDao(): ExpenseDao
@@ -26,6 +24,13 @@ abstract class MyEconomyDatabase: RoomDatabase(){
         private const val DATABASE_NAME = "myeconomy_db"
         @Volatile
         private var INSTANCE: MyEconomyDatabase? = null
+
+        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Since we didn't alter the table, there's nothing else to do here.
+                database.execSQL("ALTER TABLE EXPENSE_TYPES ADD COLUMN localid INTEGER NOT NULL DEFAULT 0")
+            }
+        }
 
         fun getInstace(context: Context): MyEconomyDatabase?{
             INSTANCE ?: synchronized(this){
@@ -42,10 +47,11 @@ abstract class MyEconomyDatabase: RoomDatabase(){
                 }
 
                 INSTANCE = Room.databaseBuilder(
-                    context,
-                    MyEconomyDatabase::class.java,
-                    DATABASE_NAME
+                        context,
+                        MyEconomyDatabase::class.java,
+                        DATABASE_NAME
                 ).addCallback(rdc)
+                        .addMigrations(MIGRATION_1_2)
                     .build()
             }
             return INSTANCE
