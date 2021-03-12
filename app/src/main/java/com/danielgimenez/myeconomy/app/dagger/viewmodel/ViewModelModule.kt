@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.danielgimenez.myeconomy.ui.viewmodel.ChartsViewModel
 import com.danielgimenez.myeconomy.ui.viewmodel.FormularyViewModel
 import com.danielgimenez.myeconomy.ui.viewmodel.LoginViewModel
+import com.danielgimenez.myeconomy.ui.viewmodel.TypesViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -31,4 +32,9 @@ abstract class ViewModelModule{
     @IntoMap
     @ViewModelKey(LoginViewModel::class)
     abstract fun bindLoginViewModel(viewModel: LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TypesViewModel::class)
+    abstract fun bindTypesViewModel(viewModel: TypesViewModel): ViewModel
 }

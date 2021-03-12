@@ -94,7 +94,6 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                     sendEvents(response.data.expenses.map { expense ->
                         expense.toExpense() 
                     })
-                    Toast.makeText(context, "Registro insertado", Toast.LENGTH_LONG).show()
                     if(dialog?.isShowing!!) dialog?.dismiss()
                 }
                 is LoadingAddEntryListState -> {

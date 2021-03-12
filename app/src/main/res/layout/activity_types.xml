@@ -6,4 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.TypesActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/types_recycler"/>
+
+    <Button
+        android:id="@+id/activity_types_save"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/save_types"
+        app:layout_constraintEnd_toStartOf="@+id/types_recycler"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/types_recycler"
+        android:background="@color/primaryColor"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

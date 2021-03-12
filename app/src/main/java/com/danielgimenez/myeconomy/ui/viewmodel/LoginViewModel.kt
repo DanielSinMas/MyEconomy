@@ -7,7 +7,6 @@ import com.danielgimenez.myeconomy.data.repository.ExpenseRepository
 import com.danielgimenez.myeconomy.data.repository.LoginRepository
 import com.danielgimenez.myeconomy.data.repository.TypeRepository
 import com.danielgimenez.myeconomy.domain.model.Type
-import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
 import com.danielgimenez.myeconomy.domain.usecase.login.GetDataForUserResponse
 import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeRequest
 import com.danielgimenez.myeconomy.ui.viewmodel.states.ErrorLoginState
@@ -41,15 +40,10 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
 
     private fun saveDataLocally(data: Response.Success<GetDataForUserResponse>){
         val response = data.data
-        if(response.types != null && response.types.size > 0){
-            var typesResult = response.types.map { type ->
-                typeRepository.insertType(InsertTypeRequest(type))
-            }
-        }
+        if(response.types != null && response.types.size > 0) createTypes(response.types)
         else if(response.types == null || response.types.size == 0){
-            typeRepository.insertType(InsertTypeRequest(Type(1, "Facturas", 1)))
-            typeRepository.insertType(InsertTypeRequest(Type(2, "Comida", 2)))
-            typeRepository.insertType(InsertTypeRequest(Type(3, "Entretenimiento", 3)))
+            val types = typeRepository.getTypes()
+            if(types?.size!! <= 0) createTypes(null)
         }
         if(response.expenses != null && response.expenses.size > 0){
             var expensesResult = response.expenses.map { expense ->
@@ -58,11 +52,24 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
         }
 
         if(response.new_user){
-            var db = Firebase.firestore
-            var user = hashMapOf("email" to "danielgimeneztorres@gmail.com")
+            val db = Firebase.firestore
+            val user = hashMapOf("email" to "danielgimeneztorres@gmail.com")
             db.collection("users").document().set(user)
         }
         loginLiveData.postValue(SuccessLogintState(data))
+    }
+
+    private fun createTypes(types: ArrayList<Type>?){
+        if(types!=null){
+            types.map { type ->
+                typeRepository.insertType(InsertTypeRequest(type))
+            }
+        }
+        else{
+            typeRepository.insertType(InsertTypeRequest(Type(1, "Facturas", 1)))
+            typeRepository.insertType(InsertTypeRequest(Type(2, "Comida", 2)))
+            typeRepository.insertType(InsertTypeRequest(Type(3, "Entretenimiento", 3)))
+        }
     }
 
     private val exceptionHandler = CoroutineExceptionHandler{_,_ ->

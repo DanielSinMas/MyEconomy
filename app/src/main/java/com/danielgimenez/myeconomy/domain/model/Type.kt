@@ -2,7 +2,7 @@ package com.danielgimenez.myeconomy.domain.model
 
 import com.danielgimenez.myeconomy.data.entity.TypeEntity
 
-data class Type(val id: Int, val name: String, val localId: Int){
+data class Type(val id: Int, var name: String, val localId: Int){
 
     fun toEntity(): TypeEntity{
         var entity = TypeEntity(name, localId)

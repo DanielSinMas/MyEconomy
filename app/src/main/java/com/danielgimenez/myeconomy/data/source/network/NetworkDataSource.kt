@@ -4,13 +4,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.data.entity.exception.NetworkConnectionException
-import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsRequest
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsResponse
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseRequest
 import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseResponse
 import com.danielgimenez.myeconomy.domain.usecase.login.GetDataForUserResponse
-import okhttp3.internal.waitMillis
+import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeRemoteResponse
+import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeRemoteRequest
 import java.lang.Exception
 
 class NetworkDataSource(private val context: Context, private val api: MyEconomyApi): INetworkDataSource(){
@@ -53,6 +53,25 @@ class NetworkDataSource(private val context: Context, private val api: MyEconomy
         if(isConnected){
             try {
                 val response = api.insertExpense(id_token, insertExpenseRequest).await()
+                return Response.Success(response)
+            } catch (e: Exception){
+                return Response.Error(e)
+            }
+        }
+        else{
+            return Response.Error(NetworkConnectionException())
+        }
+    }
+
+    override suspend fun insertType(
+        id_token: String,
+        insertTypeRemoteRequest: InsertTypeRemoteRequest
+    ): Response<InsertTypeRemoteResponse> {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val isConnected = cm.activeNetworkInfo.isConnected
+        if(isConnected){
+            try {
+                val response = api.insertType(id_token, insertTypeRemoteRequest).await()
                 return Response.Success(response)
             } catch (e: Exception){
                 return Response.Error(e)

@@ -22,11 +22,11 @@ class SplashScreen : AppCompatActivity() {
     private fun checkUserLogged(){
         val user = auth.currentUser
         startActivity(Intent(this, LoginActivity::class.java))
-        /*if(user != null){
+        if(user != null){
             startActivity(Intent(this, MainActivity::class.java))
         }
         else{
             startActivity(Intent(this, LoginActivity::class.java))
-        }*/
+        }
     }
 }
