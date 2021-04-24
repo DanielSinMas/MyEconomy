@@ -1,6 +1,5 @@
 package com.danielgimenez.myeconomy.domain.usecase.login
 
-import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.model.ExpenseResponse
 import com.danielgimenez.myeconomy.domain.model.Type
 

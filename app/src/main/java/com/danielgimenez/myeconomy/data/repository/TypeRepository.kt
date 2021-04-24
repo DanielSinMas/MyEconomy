@@ -54,5 +54,6 @@ class TypeRepository(private val context: Context,
         else{
             return Response.Error(Exception())
         }
+        return Response.Error(Exception())
     }
 }

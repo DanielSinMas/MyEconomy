@@ -16,4 +16,9 @@ data class Type(val id: Int, var name: String, val localId: Int){
                 "localid" to localId,
                 "user" to user
         )
+
+    companion object{
+        val localIdField = "localId"
+        val nameField = "name"
+    }
 }

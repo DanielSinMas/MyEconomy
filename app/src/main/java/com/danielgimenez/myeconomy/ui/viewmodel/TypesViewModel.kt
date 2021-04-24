@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.data.repository.TypeRepository
 import com.danielgimenez.myeconomy.domain.model.Type
+import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeRemoteRequest
 import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeRequest
 import com.danielgimenez.myeconomy.ui.viewmodel.states.GetTypesState
 import com.danielgimenez.myeconomy.ui.viewmodel.states.SuccessGetTypesState
@@ -31,7 +32,7 @@ class TypesViewModel @Inject constructor(private val typeRepository: TypeReposit
     fun insertTypes(types: List<Type>) = launchSilent(coroutineContext, exceptionHandler, job){
         val result = types.map { type ->
             async{
-                typeRepository.insertTypeRemote()
+                typeRepository.insertTypeRemote(InsertTypeRemoteRequest(types))
             }
         }.awaitAll()
 
