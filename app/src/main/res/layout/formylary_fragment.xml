@@ -7,6 +7,7 @@
     tools:context=".ui.activities.FormularyFragment">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -14,9 +15,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/date_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/date_header"
             android:background="@color/recyclerBackgroundColor">
 
             <LinearLayout
@@ -25,34 +26,34 @@
                 android:layout_weight="2.9">
 
                 <ImageButton
-                    android:layout_margin="10dp"
                     android:id="@+id/expense_header_left"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@drawable/arrow_left"
+                    android:layout_margin="10dp"
                     android:background="@drawable/date_button_background"
-                    android:backgroundTint="@color/date_header_background"/>
+                    android:backgroundTint="@color/date_header_background"
+                    android:src="@drawable/arrow_left" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:padding="5dp"
-                android:layout_gravity="center">
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/expense_header_month"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="November"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:layout_gravity="center"
                     android:textSize="18sp" />
 
             </LinearLayout>
@@ -61,10 +62,10 @@
                 android:id="@+id/expense_header_year"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="2020"
-                android:textSize="16sp"
                 android:layout_gravity="center"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:text="2020"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -72,14 +73,14 @@
                 android:layout_weight="2.9">
 
                 <ImageButton
-                    android:layout_margin="10dp"
                     android:id="@+id/expense_header_right"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@drawable/arrow_right"
+                    android:layout_margin="10dp"
                     android:background="@drawable/date_button_background"
-                    android:backgroundTint="@color/date_header_background"/>
+                    android:backgroundTint="@color/date_header_background"
+                    android:src="@drawable/arrow_right" />
 
             </LinearLayout>
 
@@ -87,10 +88,10 @@
         </LinearLayout>
 
         <com.danielgimenez.myeconomy.ui.components.ExpensesComponent
+            android:id="@+id/expense_component"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/date_header"
-            android:id="@+id/expense_component"/>
+            android:layout_below="@id/date_header" />
 
     </RelativeLayout>
 
@@ -104,5 +105,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="@color/primaryColor"
         app:srcCompat="@drawable/add_expense_icon" />
+
+    <ProgressBar
+        android:id="@+id/formulary_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/fab"
+        app:layout_constraintStart_toStartOf="@id/fab"
+        app:layout_constraintTop_toTopOf="@id/fab"
+        app:layout_constraintBottom_toBottomOf="@id/fab"
+        android:elevation="10dp"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

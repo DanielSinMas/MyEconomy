@@ -33,6 +33,7 @@ class FormularyViewModel @Inject constructor(private val getExpensesUseCase: Get
     var getExpenseListLiveData = MutableLiveData<GetExpenseListState>()
 
     fun insertExpense(expense: Expense) = launchSilent(coroutineContext, exceptionHandler, job){
+        addExpenseListLiveData.postValue(LoadingAddEntryListState())
         val request = InsertExpenseRequest(listOf(expense.toRequest()))
         val db = Firebase.firestore
         var response: Response<InsertExpenseResponse> = Response.Error(Exception())

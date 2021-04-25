@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.formylary_fragment.*
 import java.util.*
 import javax.inject.Inject
 
@@ -89,6 +90,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         state?.let {
             when(state){
                 is SuccessAddEntryListState -> {
+                    hideLoading()
                     val response = it.response as Response.Success
                     response.data.expenses.map {
                         expensesComponent?.addExpense(it.toExpense())
@@ -99,9 +101,10 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                     if(dialog?.isShowing!!) dialog?.dismiss()
                 }
                 is LoadingAddEntryListState -> {
-
+                    showLoading()
                 }
                 is ErrorAddEntryListState -> {
+                    hideLoading()
                     val floating = view?.findViewById<FloatingActionButton>(R.id.fab)
                     val error = it.response as Response.Error
                     Snackbar.make(floating!!, error.exception.message!!, Snackbar.LENGTH_SHORT)
@@ -261,6 +264,16 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         response.let {
             (context as MainActivity).sendEvent("Expense", "Factura")
         }
+    }
+
+    private fun showLoading(){
+        formulary_progress.visibility = View.VISIBLE
+        fab.setImageResource(R.drawable.add_expense_icon_transparent)
+    }
+
+    private fun hideLoading(){
+        formulary_progress.visibility = View.GONE
+        fab.setImageResource(R.drawable.add_expense_icon)
     }
 
     override fun onMonthChanged(month: Int, year: Int?) {

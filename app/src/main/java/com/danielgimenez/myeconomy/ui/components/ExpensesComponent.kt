@@ -47,7 +47,7 @@ class ExpensesComponent @JvmOverloads constructor(
             }
         }
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = NewExpenseAdapter(newList)
+        recycler.adapter = NewExpenseAdapter(newList, context)
     }
 
     fun setTypes(types: List<Type>){

@@ -1,5 +1,6 @@
 package com.danielgimenez.myeconomy.ui.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.danielgimenez.myeconomy.R
@@ -9,7 +10,7 @@ import com.danielgimenez.myeconomy.ui.adapter.viewholders.TypeViewHolder
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 
-class NewExpenseAdapter(var group: ArrayList<ExpenseTypeGroup>): ExpandableRecyclerViewAdapter<TypeViewHolder, ExpenseViewHolder>(group) {
+class NewExpenseAdapter(var group: ArrayList<ExpenseTypeGroup>, var context: Context): ExpandableRecyclerViewAdapter<TypeViewHolder, ExpenseViewHolder>(group) {
 
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): TypeViewHolder {
         val inflater = LayoutInflater.from(parent?.context)
@@ -20,7 +21,7 @@ class NewExpenseAdapter(var group: ArrayList<ExpenseTypeGroup>): ExpandableRecyc
     override fun onCreateChildViewHolder(parent: ViewGroup?, viewType: Int): ExpenseViewHolder {
         val inflater = LayoutInflater.from(parent?.context)
         val view = inflater.inflate(R.layout.expense_recycler_item, parent, false)
-        return ExpenseViewHolder(view)
+        return ExpenseViewHolder(view, context)
     }
 
     override fun onBindChildViewHolder(

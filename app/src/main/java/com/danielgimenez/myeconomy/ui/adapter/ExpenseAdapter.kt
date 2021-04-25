@@ -30,7 +30,7 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
         init {
             amount = itemView.findViewById(R.id.expense_item_amount)
             date = itemView.findViewById(R.id.expense_item_date)
-            type = itemView.findViewById(R.id.expense_item_type)
+            type = itemView.findViewById(R.id.expense_item_description)
             layout = itemView.findViewById(R.id.expense_item_layout)
         }
 
