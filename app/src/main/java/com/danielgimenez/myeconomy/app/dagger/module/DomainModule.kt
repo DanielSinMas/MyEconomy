@@ -6,7 +6,6 @@ import com.danielgimenez.myeconomy.data.repository.TypeRepository
 import com.danielgimenez.myeconomy.domain.usecase.charts.GetChartsUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpenseByDateUseCase
 import com.danielgimenez.myeconomy.domain.usecase.expenses.GetExpensesUseCase
-import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseUseCase
 import com.danielgimenez.myeconomy.domain.usecase.types.GetTypesUseCase
 import com.danielgimenez.myeconomy.domain.usecase.types.InsertTypeUseCase
 import dagger.Module
@@ -14,9 +13,6 @@ import dagger.Provides
 
 @Module
 class DomainModule{
-
-    @Provides
-    fun provideInserExpenseUseCase(repository: ExpenseRepository) = InsertExpenseUseCase(repository)
 
     @Provides
     fun provideGetExpensesUseCase(repository: ExpenseRepository) = GetExpensesUseCase(repository)

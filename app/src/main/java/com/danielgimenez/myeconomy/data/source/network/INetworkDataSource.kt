@@ -13,6 +13,5 @@ abstract class INetworkDataSource {
 
     abstract suspend fun getCharts(request: GetChartsRequest): Response<GetChartsResponse>
     abstract suspend fun getDataForUser(id_token: String): Response<GetDataForUserResponse>
-    abstract suspend fun insertExpense(id_token: String, insertExpenseRequest: InsertExpenseRequest): Response<InsertExpenseResponse>
     abstract suspend fun insertType(id_token: String, insertTypeRemoteRequest: InsertTypeRemoteRequest): Response<InsertTypeRemoteResponse>
 }

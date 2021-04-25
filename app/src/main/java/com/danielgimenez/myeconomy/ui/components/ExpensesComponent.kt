@@ -22,7 +22,7 @@ class ExpensesComponent @JvmOverloads constructor(
 
     private var recycler: RecyclerView
     private lateinit var listener: ExpenseAdapter.ChangeMonthListener
-    private var types: List<Type>? = ArrayList<Type>()
+    private var types: List<Type>? = ArrayList()
 
     init{
         val view = LayoutInflater.from(context).inflate(R.layout.expenses_component_layout, this, true)
@@ -43,12 +43,11 @@ class ExpensesComponent @JvmOverloads constructor(
         val newList = ArrayList<ExpenseTypeGroup>()
         if(types != null){
             for(type in types!!){
-                newList.add(ExpenseTypeGroup(type, list.filter { it.type-1 == types?.indexOf(type) } as ArrayList<Expense>))
+                newList.add(ExpenseTypeGroup(type, list.filter { it.type == type.localId } as ArrayList<Expense>))
             }
         }
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = NewExpenseAdapter(newList)
-
     }
 
     fun setTypes(types: List<Type>){

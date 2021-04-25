@@ -17,8 +17,7 @@ class RepositoryModule{
     @Provides
     @Singleton
     fun provideExpenseRepository(context: App,
-                                diskDataSource: IDiskDataSource,
-                                networkDataSource: INetworkDataSource) = ExpenseRepository(context, diskDataSource, networkDataSource)
+                                diskDataSource: IDiskDataSource) = ExpenseRepository(context, diskDataSource)
 
     @Provides
     @Singleton

@@ -12,4 +12,13 @@ data class ExpenseRequest(val amount: Float, val description: String, val type: 
     }
 
     fun toExpense() = Expense(amount, description, type, DateFunctions.parseDateFromFirestore(date)!!)
+
+    fun toMap(user: String) =
+            hashMapOf(
+                    "amount" to amount,
+                    "description" to description,
+                    "type" to type,
+                    "user" to user,
+                    "date" to date
+            )
 }

@@ -12,30 +12,13 @@ import com.danielgimenez.myeconomy.domain.usecase.expenses.InsertExpenseResponse
 import java.time.LocalDate
 
 open class ExpenseRepository(private val context: Context,
-                             private val diskDataSource: IDiskDataSource,
-                             private val networkDataSource: INetworkDataSource): BaseRepository() {
+                             private val diskDataSource: IDiskDataSource): BaseRepository() {
 
     fun saveExpenseLocally(list: List<Expense>): Response.Success<List<Expense>> {
         list.map { expense ->
             diskDataSource.insertExpense(expense.toEntity())
         }
         return Response.Success(list)
-    }
-
-    suspend fun insertExpense(request: InsertExpenseRequest): Response<InsertExpenseResponse> {
-        val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val token = sharedPref.getString("token", null)
-        if(token != null) {
-            val response = networkDataSource.insertExpense(token, request)
-            if(response is Response.Success){
-                val expenses = response.data.expenses.map { it.toExpense() }
-                saveExpenseLocally(expenses)
-            }
-            return response
-        }
-        else{
-            return Response.Error(Exception())
-        }
     }
 
     fun getExpenses(): Response.Success<List<Expense>> {

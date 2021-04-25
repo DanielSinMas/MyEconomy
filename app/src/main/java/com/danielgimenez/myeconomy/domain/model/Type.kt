@@ -13,7 +13,7 @@ data class Type(val id: Int, var name: String, val localId: Int){
         hashMapOf(
                 "id" to id,
                 "name" to name,
-                "localid" to localId,
+                "localId" to localId,
                 "user" to user
         )
 
