@@ -2,6 +2,8 @@ package com.danielgimenez.myeconomy.ui.activities
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -137,9 +139,9 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             ArrayAdapter.createFromResource(
                 it,
                     R.array.types,
-                android.R.layout.simple_spinner_dropdown_item
+                    R.layout.type_spinner_item
             ).also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.type_spinner_item)
                 selector.adapter = adapter
             }
         }
@@ -172,6 +174,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             }
         }
         dialog = builder.show()
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     private fun validate(dialogView: View, amount: TextInputEditText, date: TextInputEditText): Boolean{
