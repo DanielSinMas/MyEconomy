@@ -1,11 +1,15 @@
 package com.danielgimenez.myeconomy.domain.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.danielgimenez.myeconomy.data.entity.TypeEntity
+import kotlinx.android.parcel.Parcelize
 
-data class Type(val id: Int, var name: String, val localId: Int){
+@Parcelize
+data class Type(val id: Int, var name: String?, val localId: Int): Parcelable{
 
     fun toEntity(): TypeEntity{
-        var entity = TypeEntity(name, localId)
+        val entity = TypeEntity(name!!, localId)
         return entity
     }
 
@@ -17,7 +21,9 @@ data class Type(val id: Int, var name: String, val localId: Int){
                 "user" to user
         )
 
-    companion object{
+    override fun describeContents() = 0
+
+    companion object {
         val localIdField = "localId"
         val nameField = "name"
     }

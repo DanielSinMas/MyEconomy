@@ -24,6 +24,7 @@ import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.ui.App
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
 import com.danielgimenez.myeconomy.ui.components.ExpensesComponent
+import com.danielgimenez.myeconomy.ui.components.NewExpensesComponent
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.danielgimenez.myeconomy.utils.DateFunctions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -42,7 +43,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
     private var dialog: AlertDialog? = null
 
     private var calendar: Calendar? = null
-    private var expensesComponent: ExpensesComponent? = null
+    private var expensesComponent: NewExpensesComponent? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -76,7 +77,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             createDialog()
         }
         expensesComponent = view.findViewById(R.id.expense_component)
-        expensesComponent?.setListener(this)
+        //expensesComponent?.setListener(this)
         configureButtons(view)
     }
 
@@ -93,7 +94,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                     hideLoading()
                     val response = it.response as Response.Success
                     response.data.expenses.map {
-                        expensesComponent?.addExpense(it.toExpense())
+                        //expensesComponent?.addExpense(it.toExpense())
                     }
                     sendEvents(response.data.expenses.map { expense ->
                         expense.toExpense() 
