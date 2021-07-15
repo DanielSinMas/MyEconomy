@@ -1,6 +1,7 @@
 package com.danielgimenez.myeconomy.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,14 +18,16 @@ class ExpenseTypeAdapter(val list: ArrayList<Expense>, val type: Type): Recycler
 
         var amount: TextView? = null
         var date: TextView? = null
-        var type: TextView? = null
+        var description: TextView? = null
         var layout: LinearLayout? = null
+        var separator: View? = null
 
         init {
             amount = itemView.findViewById(R.id.expense_item_amount)
             date = itemView.findViewById(R.id.expense_item_date)
-            type = itemView.findViewById(R.id.expense_item_description)
+            description = itemView.findViewById(R.id.expense_item_description)
             layout = itemView.findViewById(R.id.expense_item_layout)
+            separator = itemView.findViewById(R.id.expense_item_separator)
         }
     }
 
@@ -34,9 +37,13 @@ class ExpenseTypeAdapter(val list: ArrayList<Expense>, val type: Type): Recycler
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.amount?.text = list[position].amount.toString().plus("€")
+        if(list[position].amount % 1 > 0) holder.amount?.text = list[position].amount.toString().plus("€")
+        else holder.amount?.text = list[position].amount.toInt().toString().plus("€")
         holder.date?.text = DateFunctions.getDateToShow(list[position].date.toString())
-        holder.type?.text = type.name
+        if(list[position].description.isEmpty()) holder.description?.text = "No description"
+        else holder.description?.text = list[position].description
+
+        if(position == list.size -1) holder.separator?.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {

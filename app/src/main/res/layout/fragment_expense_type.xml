@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/primaryColor">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:layout_width="match_parent"
@@ -11,7 +10,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/fragment_expense_type_title"/>
+        android:text="Comida"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/background_light"
+        android:id="@+id/fragment_expense_type_title"
+        android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_expense_type_recycler"
