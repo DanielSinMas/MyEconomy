@@ -46,6 +46,7 @@ class NewExpensesComponent @JvmOverloads constructor(
         mViewPagerAdapter = ViewPagerAdapter((context as AppCompatActivity).supportFragmentManager, fragmentList)
         new_expense_component_viewpager.adapter = mViewPagerAdapter
         new_expense_component_viewpager.isEnabled = false
+        new_expense_component_viewpager_tablayout.setupWithViewPager(new_expense_component_viewpager)
     }
 
     fun addExpense(expense: Expense) {
@@ -61,6 +62,12 @@ class NewExpensesComponent @JvmOverloads constructor(
 
         override fun getItem(position: Int): Fragment {
             return list[position]
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            val fragment = list[position] as ExpenseTypeFragment
+            if(fragment.type != null) return fragment.type?.name
+            else return "Unknown"
         }
     }
 }

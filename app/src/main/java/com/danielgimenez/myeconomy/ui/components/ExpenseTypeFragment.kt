@@ -42,9 +42,6 @@ class ExpenseTypeFragment: Fragment() {
     }
 
     private fun configView(){
-        if(type != null){
-            fragment_expense_type_title.text = type?.name?.toUpperCase(Locale.ROOT)
-        }
         if(!this::list.isInitialized || list.size == 0){
             fragment_expense_type_image.visibility = View.VISIBLE
         }
