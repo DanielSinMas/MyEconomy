@@ -50,7 +50,9 @@ class NewExpensesComponent @JvmOverloads constructor(
 
     fun addExpense(expense: Expense) {
         fragments.map { fragment ->
-            if(fragment.type.localId == expense.type) fragment.addExpense(expense)
+            if(fragment.type != null && fragment.type!!.localId == expense.type) {
+                fragment.addExpense(expense)
+            }
         }
     }
 

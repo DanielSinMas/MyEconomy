@@ -16,7 +16,7 @@ import kotlin.collections.ArrayList
 
 class ExpenseTypeFragment: Fragment() {
 
-    lateinit var type: Type
+    var type: Type? = null
     private lateinit var list: ArrayList<Expense>
 
     override fun onCreateView(
@@ -42,25 +42,26 @@ class ExpenseTypeFragment: Fragment() {
     }
 
     private fun configView(){
-        if(this::type.isInitialized){
-            fragment_expense_type_title.text = type.name?.toUpperCase(Locale.ROOT)
+        if(type != null){
+            fragment_expense_type_title.text = type?.name?.toUpperCase(Locale.ROOT)
         }
         if(!this::list.isInitialized || list.size == 0){
             fragment_expense_type_image.visibility = View.VISIBLE
         }
 
-        fragment_expense_type_recycler.adapter = ExpenseTypeAdapter(list, type)
+        fragment_expense_type_recycler.adapter = ExpenseTypeAdapter(list, type!!)
         fragment_expense_type_recycler.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun configRecycler(){
-        fragment_expense_type_recycler.adapter = ExpenseTypeAdapter(list, type)
+        fragment_expense_type_recycler.adapter = ExpenseTypeAdapter(list, type!!)
         fragment_expense_type_recycler.layoutManager = LinearLayoutManager(requireContext())
     }
 
     fun addExpense(expense: Expense){
         list.add(expense)
         configRecycler()
+        fragment_expense_type_image.visibility = View.GONE
     }
 
     companion object{
