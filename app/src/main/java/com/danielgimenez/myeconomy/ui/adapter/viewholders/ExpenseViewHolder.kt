@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.contentValuesOf
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.utils.DateFunctions
@@ -25,7 +24,7 @@ class ExpenseViewHolder(view: View, var context: Context): ChildViewHolder(view)
         if(expense.description.isNotEmpty())
             description.text = expense.description
         else description.setTextColor(context.getColor(R.color.type_header_background))
-        if(position % 2 == 1) layout.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.recyclerBackgroundColor))
+        if(position % 2 == 1) layout.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.primaryColorBright))
         else layout.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.white))
     }
 }

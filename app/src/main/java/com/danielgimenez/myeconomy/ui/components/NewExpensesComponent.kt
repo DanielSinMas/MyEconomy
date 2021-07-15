@@ -2,6 +2,7 @@ package com.danielgimenez.myeconomy.ui.components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +46,12 @@ class NewExpensesComponent @JvmOverloads constructor(
         mViewPagerAdapter = ViewPagerAdapter((context as AppCompatActivity).supportFragmentManager, fragmentList)
         new_expense_component_viewpager.adapter = mViewPagerAdapter
         new_expense_component_viewpager.isEnabled = false
+    }
+
+    fun addExpense(expense: Expense) {
+        fragments.map { fragment ->
+            if(fragment.type.localId == expense.type) fragment.addExpense(expense)
+        }
     }
 
     inner class ViewPagerAdapter(fm: FragmentManager, var list: List<Fragment>) : FragmentStatePagerAdapter(fm) {

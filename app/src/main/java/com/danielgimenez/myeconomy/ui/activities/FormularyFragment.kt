@@ -20,17 +20,14 @@ import com.danielgimenez.myeconomy.Response
 import com.danielgimenez.myeconomy.app.dagger.ApplicationComponent
 import com.danielgimenez.myeconomy.app.dagger.subcomponent.formulary.FormularyFragmentModule
 import com.danielgimenez.myeconomy.domain.model.Expense
-import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.ui.App
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseAdapter
-import com.danielgimenez.myeconomy.ui.components.ExpensesComponent
 import com.danielgimenez.myeconomy.ui.components.NewExpensesComponent
 import com.danielgimenez.myeconomy.ui.viewmodel.*
 import com.danielgimenez.myeconomy.utils.DateFunctions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.formylary_fragment.*
 import java.util.*
 import javax.inject.Inject
@@ -66,7 +63,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
         super.onActivityCreated(savedInstanceState)
         prepareViewModel()
         formularyViewModel.searchTypes()
-        formularyViewModel.getExpenses()
+        //formularyViewModel.getExpenses()
+        formularyViewModel.getExpensesByDate(ExpenseAdapter.monthSelected + 1, Calendar.getInstance().weekYear)
 
     }
 
@@ -93,8 +91,8 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
                 is SuccessAddEntryListState -> {
                     hideLoading()
                     val response = it.response as Response.Success
-                    response.data.expenses.map {
-                        //expensesComponent?.addExpense(it.toExpense())
+                    response.data.expenses.map { expenseResponse ->
+                        expensesComponent?.addExpense(expenseResponse.toExpense())
                     }
                     sendEvents(response.data.expenses.map { expense ->
                         expense.toExpense() 

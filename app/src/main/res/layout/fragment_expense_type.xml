@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -13,15 +13,13 @@
         android:text="Comida"
         android:textAlignment="center"
         android:textSize="18sp"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:background="@drawable/background_light"
-        android:id="@+id/fragment_expense_type_title"
-        android:textStyle="bold"/>
+        android:id="@+id/fragment_expense_type_title"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_expense_type_recycler"
@@ -29,6 +27,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/fragment_expense_type_title"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView

@@ -11,10 +11,12 @@ import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.model.Type
 import com.danielgimenez.myeconomy.ui.adapter.ExpenseTypeAdapter
 import kotlinx.android.synthetic.main.fragment_expense_type.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ExpenseTypeFragment: Fragment() {
 
-    private lateinit var type: Type
+    lateinit var type: Type
     private lateinit var list: ArrayList<Expense>
 
     override fun onCreateView(
@@ -31,17 +33,17 @@ class ExpenseTypeFragment: Fragment() {
     }
 
     private fun getExtras(){
-        if(arguments?.containsKey("type") == true){
-            type = arguments?.getParcelable("type")!!
+        if(arguments?.containsKey(TYPE) == true){
+            type = arguments?.getParcelable(TYPE)!!
         }
-        if(arguments?.containsKey("list") == true){
-            list = arguments?.getParcelableArrayList("list")!!
+        if(arguments?.containsKey(LIST) == true){
+            list = arguments?.getParcelableArrayList(LIST)!!
         }
     }
 
     private fun configView(){
         if(this::type.isInitialized){
-            fragment_expense_type_title.text = type.name
+            fragment_expense_type_title.text = type.name?.toUpperCase(Locale.ROOT)
         }
         if(!this::list.isInitialized || list.size == 0){
             fragment_expense_type_image.visibility = View.VISIBLE
@@ -51,12 +53,26 @@ class ExpenseTypeFragment: Fragment() {
         fragment_expense_type_recycler.layoutManager = LinearLayoutManager(requireContext())
     }
 
+    private fun configRecycler(){
+        fragment_expense_type_recycler.adapter = ExpenseTypeAdapter(list, type)
+        fragment_expense_type_recycler.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    fun addExpense(expense: Expense){
+        list.add(expense)
+        configRecycler()
+    }
+
     companion object{
+
+        const val TYPE = "type"
+        const val LIST = "list"
+
         fun newInstance(type: Type, list: ArrayList<Expense>) =
             ExpenseTypeFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable("type", type)
-                    putParcelableArrayList("list", list)
+                    putParcelable(TYPE, type)
+                    putParcelableArrayList(LIST, list)
                 }
             }
     }

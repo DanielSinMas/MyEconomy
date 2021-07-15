@@ -37,7 +37,7 @@ class FormularyViewModel @Inject constructor(private val getExpensesUseCase: Get
         val request = InsertExpenseRequest(listOf(expense.toRequest()))
         val db = Firebase.firestore
         var response: Response<InsertExpenseResponse> = Response.Error(Exception())
-        var collection = db.collection("expenses")
+        val collection = db.collection("expenses")
         val expensesResponseList = ArrayList<ExpenseResponse>()
         db.runTransaction {
             request.expenses.map { expense ->

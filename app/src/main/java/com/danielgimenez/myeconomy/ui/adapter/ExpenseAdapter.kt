@@ -40,7 +40,7 @@ class ExpenseAdapter(private var list: ArrayList<Expense>, private var types: Li
             type?.text = types[expense.type-1]
 
             if(position % 2 == 1){
-                layout?.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.recyclerBackgroundColor))
+                layout?.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.primaryColorBright))
             }
         }
     }

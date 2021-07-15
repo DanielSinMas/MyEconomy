@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
     android:id="@+id/expense_item_layout"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
@@ -11,10 +10,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/expense_item_amount"
             android:layout_weight="1.2"
@@ -24,24 +24,27 @@
             android:maxLines="1"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/background_light"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/expense_item_description"
             android:text="@string/no_description"
             android:layout_weight="1"
             android:textAlignment="center"
+            android:layout_marginStart="30dp"
             android:textSize="16sp"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/expense_item_date"
             android:text="4/11/20"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:layout_weight="1"
+            android:layout_marginEnd="20dp"
             android:textSize="16sp"/>
 
     </LinearLayout>
@@ -50,6 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@color/type_header_background"
         android:id="@+id/expense_item_separator"/>
 
