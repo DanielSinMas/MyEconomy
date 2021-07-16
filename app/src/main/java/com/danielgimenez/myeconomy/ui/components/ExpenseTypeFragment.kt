@@ -1,6 +1,7 @@
 package com.danielgimenez.myeconomy.ui.components
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,11 @@ class ExpenseTypeFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_expense_type, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.e("OnStart", "OnStart")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,8 +63,10 @@ class ExpenseTypeFragment: Fragment() {
 
     fun addExpense(expense: Expense){
         list.add(expense)
-        configRecycler()
-        fragment_expense_type_image.visibility = View.GONE
+        if(isAdded) {
+            configRecycler()
+            fragment_expense_type_image.visibility = View.GONE
+        }
     }
 
     companion object{

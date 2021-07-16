@@ -17,7 +17,9 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/new_expense_component_viewpager_tablayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:tabTextAppearance="@style/TabLayoutText"
+                    app:tabMinWidth="0dp"/>
 
         </androidx.viewpager.widget.ViewPager>
 

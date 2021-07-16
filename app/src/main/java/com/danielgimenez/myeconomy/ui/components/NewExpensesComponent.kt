@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import com.danielgimenez.myeconomy.R
 import com.danielgimenez.myeconomy.domain.model.Expense
 import com.danielgimenez.myeconomy.domain.model.Type
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.new_expenses_component_layout.view.*
 
 class NewExpensesComponent @JvmOverloads constructor(
@@ -44,8 +45,10 @@ class NewExpensesComponent @JvmOverloads constructor(
 
     private fun configViewPager(fragmentList: List<Fragment>) {
         mViewPagerAdapter = ViewPagerAdapter((context as AppCompatActivity).supportFragmentManager, fragmentList)
+        new_expense_component_viewpager.offscreenPageLimit = types?.size!!
         new_expense_component_viewpager.adapter = mViewPagerAdapter
         new_expense_component_viewpager.isEnabled = false
+        if(types?.size!! > 3) new_expense_component_viewpager_tablayout.tabMode = TabLayout.MODE_SCROLLABLE
         new_expense_component_viewpager_tablayout.setupWithViewPager(new_expense_component_viewpager)
     }
 
@@ -57,7 +60,7 @@ class NewExpensesComponent @JvmOverloads constructor(
         }
     }
 
-    inner class ViewPagerAdapter(fm: FragmentManager, var list: List<Fragment>) : FragmentStatePagerAdapter(fm) {
+    inner class ViewPagerAdapter(fm: FragmentManager, var list: List<Fragment>) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int = list.size
 
         override fun getItem(position: Int): Fragment {
@@ -66,8 +69,8 @@ class NewExpensesComponent @JvmOverloads constructor(
 
         override fun getPageTitle(position: Int): CharSequence? {
             val fragment = list[position] as ExpenseTypeFragment
-            if(fragment.type != null) return fragment.type?.name
-            else return "Unknown"
+            return if(fragment.type != null) fragment.type?.name
+            else "Unknown"
         }
     }
 }

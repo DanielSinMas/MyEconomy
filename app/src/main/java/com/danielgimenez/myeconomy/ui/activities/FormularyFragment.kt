@@ -28,7 +28,7 @@ import com.danielgimenez.myeconomy.utils.DateFunctions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.formylary_fragment.*
+import kotlinx.android.synthetic.main.fragment_formulary.*
 import java.util.*
 import javax.inject.Inject
 
@@ -46,7 +46,7 @@ class FormularyFragment : Fragment(), ExpenseAdapter.ChangeMonthListener {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.formylary_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_formulary, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
