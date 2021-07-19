@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/expense_recycler_item_header_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="100dp"
+        android:text="Total:"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/expense_recycler_item_header_total_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/expense_recycler_item_header_total"
+        android:textSize="18sp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/background_light"
+        android:paddingLeft="30dp"
+        android:paddingEnd="30dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
